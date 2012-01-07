@@ -22,5 +22,5 @@ hr { color: #aaa; background-color:#aaa; height:1px; border:0; }
 
 .footer { width:100px; margin-left: auto; margin-right: auto; }
 
-.byline {  }
+.byline { margin-left: 208px; margin-top:-14px; letter-spacing: 1px; }
 .strapline { margin-top:-11px; letter-spacing: 1px; }
