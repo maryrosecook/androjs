@@ -1,0 +1,7 @@
+{
+  "name": "androjs",
+  "version": "0.1.0",
+  "dependencies": {
+    "jasmine-node": ""
+  }
+}
