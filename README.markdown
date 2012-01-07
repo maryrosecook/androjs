@@ -18,6 +18,19 @@ Imagine a cube.  It can be touched.  You want it to make a sound when it goes fr
 
 Download the repository.  Open `index.html` in your browser to see the documentation and an example.
 
+## Running the tests
+
+* Install Node.js.
+* Install npm.
+* Install dependencies:
+
+    $ cd andro/js/directory
+    $ npm install
+
+* Run the tests:
+
+    $ node_modules/jasmine-node/bin/jasmine-node spec/
+
 ## Licence
 
 Andro.js is open source, under the MIT licence.

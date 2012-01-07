@@ -49,7 +49,7 @@ describe('augmentOwner', function(){
   it('should throw error if called on obj not set up', function(){
     expect(function(){
       andro.augmentOwner(obj, {});
-    }).toThrow("This object is not set up for andro.");
+    }).toThrow("This object is not set up for Andro.");
   });
 
   it('should throw error if no behaviour passed', function(){
@@ -174,7 +174,7 @@ describe('behaviour', function(){
   it('should throw error if called on obj not set up', function(){
     expect(function(){
       andro.behaviour(obj, "whatever");
-    }).toThrow("This object is not set up for andro.");
+    }).toThrow("This object is not set up for Andro.");
   });
 });
 
@@ -187,7 +187,7 @@ describe('eventer', function(){
   it('should throw error if called on obj not set up', function(){
     expect(function(){
       andro.eventer(obj, "whatever");
-    }).toThrow("This object is not set up for andro.");
+    }).toThrow("This object is not set up for Andro.");
   });
 });
 
@@ -211,6 +211,6 @@ describe('checkIsSetup', function(){
   it('should throw error if called on obj not set up', function(){
     expect(function(){
       andro.eventer(obj, "whatever");
-    }).toThrow("This object is not set up for andro.");
+    }).toThrow("This object is not set up for Andro.");
   });
 });
