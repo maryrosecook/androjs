@@ -7,7 +7,7 @@ beforeEach(function () {
   var obj = {};
 
   andro.setupOwner(obj);
-  eventer = andro.getEventer(obj);
+  eventer = andro.eventer(obj);
 
   bound = {};
 });

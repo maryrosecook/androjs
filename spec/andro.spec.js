@@ -149,7 +149,7 @@ describe('augmentOwner', function(){
   });
 });
 
-describe('getBehaviour', function(){
+describe('behaviour', function(){
   var behaviour1 = null;
   var behaviour2 = null;
 
@@ -163,30 +163,30 @@ describe('getBehaviour', function(){
     andro.augmentOwner(obj, behaviour1);
     andro.augmentOwner(obj, behaviour2);
 
-    expect(andro.getBehaviour(obj, behaviour2.name).name).toEqual("Behaviour2");
+    expect(andro.behaviour(obj, behaviour2.name).name).toEqual("Behaviour2");
   });
 
   it('should return undefined if no such behaviour', function(){
     andro.setupOwner(obj);
-    expect(andro.getBehaviour(obj, "noway")).not.toBeDefined();
+    expect(andro.behaviour(obj, "noway")).not.toBeDefined();
   });
 
   it('should throw error if called on obj not set up', function(){
     expect(function(){
-      andro.getBehaviour(obj, "whatever");
+      andro.behaviour(obj, "whatever");
     }).toThrow("This object is not set up for andro.");
   });
 });
 
-describe('getEventer', function(){
+describe('eventer', function(){
   it('should return eventer', function(){
     andro.setupOwner(obj);
-    expect(andro.getEventer(obj).bind).toBeDefined();
+    expect(andro.eventer(obj).bind).toBeDefined();
   });
 
   it('should throw error if called on obj not set up', function(){
     expect(function(){
-      andro.getEventer(obj, "whatever");
+      andro.eventer(obj, "whatever");
     }).toThrow("This object is not set up for andro.");
   });
 });
@@ -210,7 +210,7 @@ describe('checkIsSetup', function(){
 
   it('should throw error if called on obj not set up', function(){
     expect(function(){
-      andro.getEventer(obj, "whatever");
+      andro.eventer(obj, "whatever");
     }).toThrow("This object is not set up for andro.");
   });
 });

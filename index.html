@@ -1,0 +1,272 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <title>Andro.js</title>
+
+    <link rel="stylesheet" type="text/css" href="resources/main.css" />
+    <link href="resources/prettify.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="resources/andro.js"></script>
+
+    <script type="text/javascript" src="resources/prettify.js"></script>
+  </head>
+  <body onload="prettyPrint()">
+    <h1>Andro.js</h1>
+    &nbsp;by <a href='http://maryrosecook.com'>mary rose cook</a><br/>
+    Mix behaviours into objects<br/>
+
+    <h4><a href='http://github.com/maryrosecook/androjs'>Get the code from Github</a></h4>
+
+    <h2>What is Andro.js?</h2>
+
+    <p>
+      <a href='http://github.com/maryrosecook/androjs'>Andro.js</a> takes mixins and applies them, each in their own namespace, to an object, and lets them talk to one other via an event emitter.
+    </p>
+
+    <h3>Come again?</h3>
+      Imagine a cube.  It can be touched.  You want it to make a sound when it goes from not being touched to being touched.  You write a little behaviour that emits an event when a first touch occurs.  You write another little behaviour that plays a sound when it receives a first touch event.  You combine these behaviours on your cube with Andro.js.
+    <p>
+
+    <p>
+      Or, to put it another way, Andro.js a library for objects that can't quite decide who they are.
+    </p>
+
+    </p>
+
+    <h3>Um, may I see an example?</h3>
+
+    <p>
+      I instantiate <code>Andro</code>.  I define a <code>Cube</code> constructor with a <code>touch</code> function.  When this <code>touch</code> function is called, it emits a <code>touch</code> event to all behaviours attached to the cube.
+    </p>
+
+<pre class="prettyprint">
+  var andro = new Andro();
+
+  function Cube {
+    this.touch = function(contact) {
+      andro.eventer(this).emit("touch", contact);
+    };
+  };
+</pre>
+
+    <p>
+      I define <code>firstTouchBehaviour</code>.  This binds to the <code>touch</code> events emitted by its owner and keeps track of the number of things currently in contact.  When the owner goes from being untouched to being touched, <code>firstTouchBehaviour</code> emits a <code>FirstTouch:newlyBeingTouched</code> event.
+    </p>
+
+<pre class="prettyprint">
+  var firstTouchBehaviour = {
+    name: "FirstTouch",
+    touchCount: 0,
+
+    setup: function(owner) {
+      andro.eventer(owner).bind(this, "touch", function(contact) {
+        if(contact === "added") {
+          if(this.touchCount === 0) {
+            andro.eventer(owner).emit(this.name + ":newlyBeingTouched");
+          }
+          this.touchCount++;
+        } else if(contact === "removed") {
+          this.touchCount--;
+        }
+      });
+    }
+  };
+</pre>
+
+    <p>
+      I define <code>soundBehaviour</code>.  This binds to the <code>FirstTouch:newlyBeingTouched</code> event.  Each time this event occurs, <code>soundBehaviour</code> makes a noise: "Rarrrrrwwwwwwwwwwwwwwww".
+    </p>
+
+<pre class="prettyprint">
+  var soundBehaviour = {
+    name: "Sound",
+    setup: function(owner) {
+      andro.eventer(owner).bind(this, "FirstTouch:newlyBeingTouched", function() {
+        console.log("Rarrrrrwwwwwwwwwwwwwwww");
+      });
+    }
+  };
+</pre>
+
+    <p>
+      I now put everything together.  I instantiate <code>cube</code>, set it up for use with Andro.js and augment it with <code>firstTouchBehaviour</code> and <code>soundBehaviour</code>.  Finally, I simulate two touches upon the cube.  On the first, it roars.  On the second, it does not.
+    </p>
+
+<pre class="prettyprint">
+  var cube = new Cube();
+  andro.setupOwner(cube);
+  andro.augmentOwner(cube, firstTouchBehaviour);
+  andro.augmentOwner(cube, soundBehaviour);
+
+  cube.touch("added"); // rarrrww
+  cube.touch("added"); // silence
+</pre>
+
+    <h3>Why is this cool?</h3>
+
+    <p>
+      Behaviours are completely separate from each other, so they are reusable.  You could write <code>explodeBehaviour</code>, combine it with <code>firstTouchBehaviour</code> and have exploding cubes.  Or you could write <code>wetBehaviour</code>, combine it with explodey and touchey and have depth charges.
+    </p>
+
+    <p>
+      Behaviour mixins are particularly powerful for writing video games.  They make the concoction of reactive game objects really simple: no more nightmareish inheritance hierarchies or weird bundles of functions that invent cryptic interfaces for the objects upon which they operate.
+    </p>
+
+    <h2>Reference</h2>
+
+    <h3>Set up an owner object</h3>
+
+    <p>
+      Call <code>setupOwner()</code>, passing in your owner object.  This adds a <code>behaviours</code> property that will hold the behaviour objects that augment the owner.  It also adds a <code>behaviours.eventer</code> property that holds the event emitter.
+    </p>
+
+<pre class="prettyprint">
+  var andro = new Andro();
+
+  var ownerObject = {};
+  andro.setupOwner(ownerObject);
+</pre>
+
+    <h3>Add a behaviour to an owner object</h3>
+    <p>
+      A behaviour is a JavaScript object that has some properties and functions.  It must, at a minimum, have a <code>name</code> property.  For example, here is a behaviour that does absolutely nothing:
+    </p>
+
+<pre class="prettyprint">
+  var wooBehaviour = {
+    name: "Woo",
+
+    setup: function(owner) {
+      this.owner = owner;
+    }
+  };
+</pre>
+    <p>
+      Add this behaviour to your owner object by calling <code>augmentOwner()</code> and passing in <code>ownerObject</code> and <code>wooBehaviour</code>.  This creates a behaviour object at <code>ownerObject.behaviours[behaviour.name]</code> and writes the properties and functions of the behaviour to it.
+    </p>
+
+<pre class="prettyprint">
+  var andro = new Andro();
+
+  var ownerObject = {};
+  andro.setupOwner(ownerObject);
+  andro.augmentOwner(ownerObject, wooBehaviour);
+</pre>
+
+    <p>
+      <code>wooBehaviour</code> includes the optional function, <code>setup()</code>, that will automatically be run when you call <code>augmentOwner()</code>.  &nbsp;<code>setup()</code> receives an <code>owner</code> argument that is bound to the owner of the behaviour.  You may want to store this for later use.
+    </p>
+
+    <h3>Bind a behaviour to an event</h3>
+
+    <p>
+      We can improve the <code>wooBehaviour</code> from the previous section so that, when it receives an event, <code>woo</code>, it goes "woo":
+    </p>
+
+<pre class="prettyprint">
+  var wooBehaviour = {
+    name: "Woo",
+
+    setup: function(owner) {
+      this.owner = owner;
+      andro.eventer(owner).bind(this, "woo", function() {
+        console.log("Woo.");
+      });
+    }
+  };
+</pre>
+
+    <p>
+      A reference to the event emitter was obtained by calling <code>eventer()</code> and passing in the owner object.  The <code>setup()</code> function now calls <code>bind</code>, passing the behaviour, event name and a callback.  Now, whenever the event, <code>woo</code>, is emitted, our behaviour will go, "woo".
+    </p>
+
+    <h3>Emit events from a behaviour</h3>
+
+    <p>
+      We can further improve the <code>wooBehaviour</code> from the previous section so that, as well as going "woo", it emits an event, <code>hoo</code>:
+    </p>
+
+<pre class="prettyprint">
+  var wooBehaviour = {
+    name: "Woo",
+
+    setup: function(owner) {
+      this.owner = owner;
+      andro.eventer(owner).bind(this, "woo", this.woo);
+    },
+
+    woo: function() {
+      console.log("Woo.");
+      andro.eventer(this.owner).emit("hoo", this.name);
+    }
+  };
+</pre>
+
+    <p>
+      I called <code>eventer()</code> to get the event emitter and used it to emit the <code>hoo</code> event, sending the name of the behaviour as data.  That way, anyone who binds to the <code>hoo</code> event will know who is doing the hooing.
+    </p>
+
+    <h3>Unbind a behaviour from an event</h3>
+
+    <p>
+      Let's say we're worried that we are going a bit mental with the wooing.  We can alter our behaviour so that, after wooing once, it unbinds from the <code>woo</code> event, thus cutting out any future woos.
+    </p>
+
+<pre class="prettyprint">
+  woo: function() {
+    console.log("Woo.");
+    andro.eventer(this.owner).emit("hoo", this.name);
+    andro.eventer(this.owner).unbind(this, "woo");
+  }
+</pre>
+
+    <p>
+      See above? See how on line four it gets the eventer and calls unbind, passing in the behaviour and the event to unbind from?
+    </p>
+
+    <h3>Export from a behaviour</h3>
+
+    <p>
+      To gild the lily, we will make <code>wooBehaviour</code> respond to inquiries about whether "woo" has been said.  To do this, we add an attribute called <code>hasWooed</code> and alter the <code>woo</code> function to set <code>hasWooed</code> to <code>true</code>.  We add a function, <code>getHasWooed()</code>, that returns <code>hasWooed</code>.  Finally, we alter <code>setup()</code> so that it returns an object that includes <code>getHasWooed</code>.  This function will get written onto the owner object so it can be used by the owner itself, or other objects.
+    </p>
+
+<pre class="prettyprint">
+  var wooBehaviour = {
+    name: "Woo",
+    hasWooed: false,
+
+    setup: function(owner) {
+      this.owner = owner;
+      andro.eventer(owner).bind(this, "woo", this.woo);
+
+      return {
+        "hasWooed": this.hasWooed
+      };
+    },
+
+    woo: function() {
+      console.log("Woo.");
+      this.hasWooed = true;
+      andro.eventer(this.owner).emit("hoo", this.name);
+      andro.eventer(this.owner).unbind(this, "woo");
+    },
+
+    getHasWooed: function() {
+      return this.hasWooed;
+    }
+  };
+</pre>
+
+    <h2>Licence</h2>
+
+    <p>
+      The <a href='http://github.com/maryrosecook/androjs'>code</a> is open source, under the MIT licence.
+    </p>
+
+
+    <br/>
+    <hr/>
+    <div class="footer">
+      <a href="http://maryrosecook.com">maryrosecook.com</a>
+    </div>
+   </body>
+ </html>

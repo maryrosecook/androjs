@@ -66,13 +66,13 @@
       }
     },
 
-    getBehaviour: function(owner, behaviourName) {
+    behaviour: function(owner, behaviourName) {
       if(this.checkIsSetup(owner)) {
         return owner.behaviours[behaviourName];
       }
     },
 
-    getEventer: function(owner) {
+    eventer: function(owner) {
       if(this.checkIsSetup(owner)) {
         return owner.behaviours.eventer;
       }
@@ -89,7 +89,7 @@
         return true;
       }
 
-      throw "This object is not set up for andro.";
+      throw "This object is not set up for Andro.";
     }
   };
 
