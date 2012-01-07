@@ -20,14 +20,12 @@ Download the repository.  Open `index.html` in your browser to see the documenta
 
 ## Running the tests
 
-* Install Node.js.
-* Install npm.
-* Install dependencies:
+Install Node.js and npm.  Then install the node dependencies with
 
     $ cd andro/js/directory
     $ npm install
 
-* Run the tests:
+Finally, run the tests with:
 
     $ node_modules/jasmine-node/bin/jasmine-node spec/
 
