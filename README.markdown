@@ -8,7 +8,7 @@ Mix behaviours into objects.
 
 ## What is Andro.js?
 
-Andro.js takes mixins and applies them, each in their own namespace, to an object, and lets them talk to one other via an event emitter.
+Andro.js takes mixins and applies them, each in its own namespace, to an object, and lets them talk to one other via an event emitter.
 
 ## Come again?
 
