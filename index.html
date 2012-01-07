@@ -35,10 +35,11 @@
     <h3>Um, may I see an example?</h3>
 
     <p>
-      I instantiate <code>Andro</code>.  I define a <code>Cube</code> constructor with a <code>touch</code> function.  When this <code>touch</code> function is called, it emits a <code>touch</code> event to all behaviours attached to the cube.
+      I require the <code>andro.js</code> file.  I instantiate <code>Andro</code>.  I define a <code>Cube</code> constructor with a <code>touch</code> function.  When this <code>touch</code> function is called, it emits a <code>touch</code> event to all behaviours attached to the cube.
     </p>
 
 <pre class="prettyprint">
+  var Andro = require('andro').Andro;
   var andro = new Andro();
 
   function Cube {

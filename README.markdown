@@ -16,7 +16,7 @@ Imagine a cube.  It can be touched.  You want it to make a sound when it goes fr
 
 ## Getting started
 
-Download the repository.  Open `index.html` in your browser to see the documentation and an example.
+Download the repository.  Require the `andro.js` file in your code.  Open `index.html` in your browser to see the documentation and an example.
 
 ## Running the tests
 
