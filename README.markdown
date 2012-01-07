@@ -4,7 +4,7 @@
 * http://maryrosecook.com
 * maryrosecook@maryrosecook.com
 
-Mix behaviours into objects
+Mix behaviours into objects.
 
 ## What is Andro.js?
 
