@@ -1,10 +1,10 @@
 # Andro.js
-Mix behaviours into objects
 
-By mary rose cook
-
+* by mary rose cook
 * http://maryrosecook.com
 * maryrosecook@maryrosecook.com
+
+Mix behaviours into objects
 
 ## What is Andro.js?
 
