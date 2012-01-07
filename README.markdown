@@ -22,7 +22,7 @@ Download the repository.  Open `index.html` in your browser to see the documenta
 
 Install Node.js and npm.  Then install the node dependencies with:
 
-    $ cd andro/js/directory
+    $ cd path/to/androjs
     $ npm install
 
 Finally, run the tests with:
