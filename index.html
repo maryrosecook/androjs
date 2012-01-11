@@ -192,7 +192,7 @@
     <h3>Emit events from a behaviour</h3>
 
     <p>
-      We can further improve the <code>wooBehaviour</code> from the previous section so that, as well as going "woo", it emits an event, <code>hoo</code>:
+      We can further improve the <code>wooBehaviour</code> from the previous section.  As well as going "woo", it will emit an event, <code>hoo</code>.
     </p>
 
 <pre class="prettyprint">
@@ -231,13 +231,13 @@
 </pre>
 
     <p>
-      See above? See how on line four it gets the eventer and calls unbind, passing in the behaviour and the event to unbind from?
+      See how on line four it gets the eventer, calls unbind, and passes in the behaviour and the event to unbind from?
     </p>
 
     <h3>Export from a behaviour</h3>
 
     <p>
-      To gild the lily, we will make <code>wooBehaviour</code> respond to enquiries about whether "woo" has been said.  To do this, we add an attribute called <code>hasWooed</code> and alter the <code>woo</code> function to set <code>hasWooed</code> to <code>true</code>.  We add a function, <code>getHasWooed()</code>, that returns <code>hasWooed</code>.  Finally, we alter <code>setup()</code> so that it returns an object that includes <code>getHasWooed</code>.  This function will get written onto the owner object so it can be used by the owner itself, or other objects.
+      To gild the lily, we will make <code>wooBehaviour</code> respond to enquiries about whether "woo" has been said.  To do this, we add an attribute called <code>hasWooed</code> and alter the <code>woo</code> function to set <code>hasWooed</code> to <code>true</code>.  We add a function, <code>getHasWooed()</code>, that returns <code>hasWooed</code>.  Finally, we alter <code>setup()</code> so that it returns an object that includes <code>getHasWooed</code>.  This function will get written onto the owner object so it can be used by the owner itself, or by other objects.
     </p>
 
 <pre class="prettyprint">
@@ -280,13 +280,13 @@
       Status-consuming behaviours are also good.  Like, "Every time I hear my owner has been touched, I make a sound."
     </p>
     <p>
-      Exported functions that allow the interrogation of state are OK.  Like, "Here you are, owner, here is a function that others can use to find out if anything is touching you."
+      Exported functions that allow the interrogation of state are OK.  Like, "Here you are, owner.  Here is a function that others can use to find out if anything is touching you."
     </p>
     <p>
       Exported functions that allow the state of the owner to be changed are to be used sparingly.  Don't go wild with stuff like, "Owner, here is a function that allows someone to tell you to play a sound."
     </p>
     <p>
-      Behaviours that issue orders are bad.  Like, "Every time I hear my owner has been touched, I say, 'make a sound', because there might be a sound maker hanging around who can handle my order."  This sort of talk is hard to debug because it comprises one behaviour mediating between two others.
+      Behaviours that issue orders are bad.  Like, "Every time I hear my owner has been touched, I say, 'make a sound', because there might be a sound-maker hanging around who can handle my order."  This sort of talk is hard to debug because it comprises one behaviour mediating between two others.
     </p>
 
     <h2>Licence</h2>
