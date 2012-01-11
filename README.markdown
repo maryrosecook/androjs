@@ -20,18 +20,18 @@ Download the repository.  Require the `andro.js` file in your code.  Open `index
 
 ## Running the tests
 
-Install Node.js and npm.  Then install the node dependencies with:
+Install Node.js and npm.
+
+Install the node dependencies
 
     $ cd path/to/androjs
     $ npm install
 
-Finally, run the tests with:
+Run the tests
 
+    $ cd path/to/androjs
     $ node_modules/jasmine-node/bin/jasmine-node spec/
 
 ## Licence
 
 Andro.js is open source, under the MIT licence.
-
-
-
