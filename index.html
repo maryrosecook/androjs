@@ -26,7 +26,7 @@
     </p>
 
     <h3>Come again?</h3>
-      Imagine a cube.  It can be touched.  You want it to make a sound when it goes from not being touched to being touched.  You write a little behaviour that emits an event when a first touch occurs.  You write another little behaviour that plays a sound when it receives a first touch event.  You combine these behaviours on your cube with Andro.js.
+      Imagine a cube.  It can be touched.  You want the cube to make a sound when it goes from not being touched to being touched.  You write a little behaviour that emits an event when a first touch occurs.  You write another little behaviour that plays a sound when it receives a first touch event.  You combine these behaviours on your cube with Andro.js.
     <p>
 
     <p>
@@ -105,7 +105,7 @@
   cube.touch("added"); // silence
 </pre>
 
-    <h3>Why is this cool?</h3>
+    <h2>Why is this cool?</h2>
 
     <p>
       Behaviours are completely separate from each other, so they are reusable.  You could write <code>explodeBehaviour</code>, combine it with <code>firstTouchBehaviour</code> and have exploding cubes.  Or you could write <code>wetBehaviour</code>, combine it with explodey and touchey and have depth charges.
@@ -113,6 +113,10 @@
 
     <p>
       Behaviour mixins are particularly powerful for writing video games.  They make the concoction of reactive game objects really simple: no more nightmareish inheritance hierarchies or weird bundles of functions that invent cryptic interfaces for the objects upon which they operate.
+    </p>
+
+    <p>
+      See the end of this document for why Andro.js might not be cool.
     </p>
 
     <h2>Reference</h2>
@@ -132,20 +136,20 @@
 
     <h3>Add a behaviour to an owner object</h3>
     <p>
-      A behaviour is a JavaScript object that has some properties and functions.  It must, at a minimum, have a <code>name</code> property.  For example, here is a behaviour that does absolutely nothing:
+      A behaviour is a JavaScript object that has some properties and functions.  It must, at a minimum, have a <code>name</code> property.  Here is a behaviour that does absolutely nothing of use:
     </p>
 
 <pre class="prettyprint">
   var wooBehaviour = {
     name: "Woo",
 
-    setup: function(owner) {
+    setup: function(owner, settings) {
       this.owner = owner;
     }
   };
 </pre>
     <p>
-      Add this behaviour to your owner object by calling <code>augmentOwner()</code> and passing in <code>ownerObject</code> and <code>wooBehaviour</code>.  This creates a behaviour object at <code>ownerObject.behaviours[behaviour.name]</code> and writes the properties and functions of the behaviour to it.
+      Add this behaviour to your owner object by calling <code>augmentOwner()</code> and passing in <code>ownerObject</code>, <code>wooBehaviour</code> and an optional <code>settings</code> object.  This creates a behaviour object at <code>ownerObject.behaviours[behaviour.name]</code> and writes the properties and functions of the behaviour to it.
     </p>
 
 <pre class="prettyprint">
@@ -153,24 +157,26 @@
 
   var ownerObject = {};
   andro.setupOwner(ownerObject);
-  andro.augmentOwner(ownerObject, wooBehaviour);
+  andro.augmentOwner(ownerObject, wooBehaviour, {
+    followUp: "hoo"
+  });
 </pre>
 
     <p>
-      <code>wooBehaviour</code> includes the optional function, <code>setup()</code>, that will automatically be run when you call <code>augmentOwner()</code>.  &nbsp;<code>setup()</code> receives an <code>owner</code> argument that is bound to the owner of the behaviour.  You may want to store this for later use.
+      <code>wooBehaviour</code> includes the optional function, <code>setup()</code>, that will automatically be run when we call <code>augmentOwner()</code>.  When it is run, <code>setup()</code> receives an <code>owner</code> argument that is bound to the owner of the behaviour, and the optional <code>settings</code> object that was passed to <code>augmentOwner()</code>.
     </p>
 
     <h3>Bind a behaviour to an event</h3>
 
     <p>
-      We can improve the <code>wooBehaviour</code> from the previous section so that, when it receives an event, <code>woo</code>, it goes "woo":
+      We can improve the version of <code>wooBehaviour</code> from the previous section so that, when it receives an event, <code>woo</code>, it goes "woo":
     </p>
 
 <pre class="prettyprint">
   var wooBehaviour = {
     name: "Woo",
 
-    setup: function(owner) {
+    setup: function(owner, settings) {
       this.owner = owner;
       andro.eventer(owner).bind(this, "woo", function() {
         console.log("Woo.");
@@ -193,20 +199,21 @@
   var wooBehaviour = {
     name: "Woo",
 
-    setup: function(owner) {
+    setup: function(owner, settings) {
       this.owner = owner;
+      this.followUp = settings.followUp;
       andro.eventer(owner).bind(this, "woo", this.woo);
     },
 
     woo: function() {
       console.log("Woo.");
-      andro.eventer(this.owner).emit("hoo", this.name);
+      andro.eventer(this.owner).emit(this.followUp, this.name);
     }
   };
 </pre>
 
     <p>
-      I called <code>eventer()</code> to get the event emitter and used it to emit the <code>hoo</code> event, sending the name of the behaviour as data.  That way, anyone who binds to the <code>hoo</code> event will know who is doing the hooing.
+      I called <code>eventer()</code> to get the event emitter and used it to emit the <code>hoo</code> event that was passed in via <code>settings</code>.  I sent along the name of the behaviour as data.  That way, anyone who binds to the <code>hoo</code> event will know who is doing the hooing.
     </p>
 
     <h3>Unbind a behaviour from an event</h3>
@@ -230,7 +237,7 @@
     <h3>Export from a behaviour</h3>
 
     <p>
-      To gild the lily, we will make <code>wooBehaviour</code> respond to inquiries about whether "woo" has been said.  To do this, we add an attribute called <code>hasWooed</code> and alter the <code>woo</code> function to set <code>hasWooed</code> to <code>true</code>.  We add a function, <code>getHasWooed()</code>, that returns <code>hasWooed</code>.  Finally, we alter <code>setup()</code> so that it returns an object that includes <code>getHasWooed</code>.  This function will get written onto the owner object so it can be used by the owner itself, or other objects.
+      To gild the lily, we will make <code>wooBehaviour</code> respond to enquiries about whether "woo" has been said.  To do this, we add an attribute called <code>hasWooed</code> and alter the <code>woo</code> function to set <code>hasWooed</code> to <code>true</code>.  We add a function, <code>getHasWooed()</code>, that returns <code>hasWooed</code>.  Finally, we alter <code>setup()</code> so that it returns an object that includes <code>getHasWooed</code>.  This function will get written onto the owner object so it can be used by the owner itself, or other objects.
     </p>
 
 <pre class="prettyprint">
@@ -238,8 +245,9 @@
     name: "Woo",
     hasWooed: false,
 
-    setup: function(owner) {
+    setup: function(owner, settings) {
       this.owner = owner;
+      this.followUp = settings.followUp;
       andro.eventer(owner).bind(this, "woo", this.woo);
 
       return {
@@ -250,7 +258,7 @@
     woo: function() {
       console.log("Woo.");
       this.hasWooed = true;
-      andro.eventer(this.owner).emit("hoo", this.name);
+      andro.eventer(this.owner).emit(this.followUp, this.name);
       andro.eventer(this.owner).unbind(this, "woo");
     },
 
@@ -259,6 +267,27 @@
     }
   };
 </pre>
+
+    <h2>Why might this not be cool?</h2>
+
+    <p>
+      Andro.js contains four modes of expression: mixins, exports, settings objects and event emitters.  The library protects you from harming your owner objects: behaviours are name-spaced and you cannot give an export the same name as an existing owner attribute.  However, armed with an event emitter and mixins, you can still express yourself into a hell of a mess.  Therefore, I humbly offer you some things that seem to be true more often than not.
+    </p>
+
+    <p>
+      Status behaviours are good.  That is, behaviours that solely talk about what is going on.  Like, "My owner is longer being touched by anything".</p>
+    <p>
+      Status-consuming behaviours are also good.  Like, "Every time I hear my owner has been touched, I make a sound."
+    </p>
+    <p>
+      Exported functions that allow the interrogation of state are OK.  Like, "Here you are, owner, here is a function that others can use find out whether anything is touching you."
+    </p>
+    <p>
+      Exported functions that allow the state of the owner to be changed are to be used sparingly.  Don't go wild with stuff like, "Owner, here is a function that allows someone to tell you to play a sound."
+    </p>
+    <p>
+      Behaviours that issue orders are bad.  Like, "Every time I hear my owner has been touched, I say, 'make a sound', because there might be a sound maker hanging around who can handle my order."  This sort of talk is hard to debug because it comprises one behaviour mediating between two others.
+    </p>
 
     <h2>Licence</h2>
 

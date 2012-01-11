@@ -24,3 +24,6 @@ hr { color: #aaa; background-color:#aaa; height:1px; border:0; }
 
 .byline { margin-left: 208px; margin-top:-14px; letter-spacing: 1px; }
 .strapline { margin-top:-11px; letter-spacing: 1px; }
+
+ol { padding-left: 16px; }
+li { padding: 5px 0 5px 0; }
