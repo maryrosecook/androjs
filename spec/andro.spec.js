@@ -106,6 +106,32 @@ describe('augmentOwner', function(){
     expect(obj.behaviours[basicBehaviour.name].yeah).toEqual(true);
   });
 
+  it('should pass settings into setup() when called on behaviour', function(){
+    basicBehaviour.setup = function(owner, settings) {
+      this.yeah = true;
+      expect(settings.woohoo).toEqual("yes");
+    };
+
+    andro.setupOwner(obj);
+    andro.augmentOwner(obj, basicBehaviour, {
+      woohoo: "yes"
+    });
+
+    expect(obj.behaviours[basicBehaviour.name].yeah).toEqual(true);
+  });
+
+  it('should pass empty obj into setup() when called on behaviour if no settings', function(){
+    basicBehaviour.setup = function(owner, settings) {
+      this.yeah = true;
+      expect(settings).toEqual({});
+    };
+
+    andro.setupOwner(obj);
+    andro.augmentOwner(obj, basicBehaviour);
+
+    expect(obj.behaviours[basicBehaviour.name].yeah).toEqual(true);
+  });
+
   it('should write exports from setup to main obj', function() {
     basicBehaviour.setup = function() {
       return {
