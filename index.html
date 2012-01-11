@@ -26,7 +26,7 @@
     </p>
 
     <h3>Come again?</h3>
-      Imagine a cube.  It can be touched.  You want the cube to make a sound when it goes from not being touched to being touched.  You write a little behaviour that emits an event when a first touch occurs.  You write another little behaviour that plays a sound when it receives a first touch event.  You combine these behaviours on your cube with Andro.js.
+      Imagine a cube.  It can be touched.  You want this cube to make a sound when it goes from not being touched to being touched.  You write a little behaviour that emits an event when a first touch occurs.  You write another little behaviour that plays a sound when it receives a first touch event.  You combine these behaviours on your cube with Andro.js.
     <p>
 
     <p>
@@ -112,11 +112,11 @@
     </p>
 
     <p>
-      Behaviour mixins are particularly powerful for writing video games.  They make the concoction of reactive game objects really simple: no more nightmareish inheritance hierarchies or weird bundles of functions that invent cryptic interfaces for the objects upon which they operate.
+      Behaviour mixins are good for writing video games.  They help with the concoction of game object logic: no more nightmareish inheritance hierarchies or weird bundles of functions that invent cryptic interfaces for the objects upon which they operate.
     </p>
 
     <p>
-      See the end of this document for why Andro.js might not be cool.
+      See <a href="#notcool">the end of this document</a> for why Andro.js might not be cool.
     </p>
 
     <h2>Reference</h2>
@@ -124,7 +124,7 @@
     <h3>Set up an owner object</h3>
 
     <p>
-      Call <code>setupOwner()</code>, passing in your owner object.  This adds a <code>behaviours</code> property that will hold the behaviour objects that augment the owner.  It also adds a <code>behaviours.eventer</code> property that holds the event emitter.
+      We call <code>setupOwner()</code>, passing in an owner object.  This adds a <code>behaviours</code> property that will hold the behaviour objects that augment the owner.  It also adds a <code>behaviours.eventer</code> property that holds the event emitter.
     </p>
 
 <pre class="prettyprint">
@@ -136,7 +136,7 @@
 
     <h3>Add a behaviour to an owner object</h3>
     <p>
-      A behaviour is a JavaScript object that has some properties and functions.  It must, at a minimum, have a <code>name</code> property.  Here is a behaviour that does absolutely nothing of use:
+      A behaviour is a JavaScript object that has some properties and functions.  It must, at a minimum, have a <code>name</code> property.  Here is a behaviour that does absolutely nothing:
     </p>
 
 <pre class="prettyprint">
@@ -149,7 +149,7 @@
   };
 </pre>
     <p>
-      Add this behaviour to your owner object by calling <code>augmentOwner()</code> and passing in <code>ownerObject</code>, <code>wooBehaviour</code> and an optional <code>settings</code> object.  This creates a behaviour object at <code>ownerObject.behaviours[behaviour.name]</code> and writes the properties and functions of the behaviour to it.
+      We add this behaviour to the owner object by calling <code>augmentOwner()</code> and passing in <code>ownerObject</code>, <code>wooBehaviour</code> and an optional <code>settings</code> object.  This creates a behaviour object at <code>ownerObject.behaviours[behaviour.name]</code> and writes the properties and functions of the behaviour to it.
     </p>
 
 <pre class="prettyprint">
@@ -163,7 +163,7 @@
 </pre>
 
     <p>
-      <code>wooBehaviour</code> includes the optional function, <code>setup()</code>, that will automatically be run when we call <code>augmentOwner()</code>.  When it is run, <code>setup()</code> receives an <code>owner</code> argument that is bound to the owner of the behaviour, and the optional <code>settings</code> object that was passed to <code>augmentOwner()</code>.
+      <code>wooBehaviour</code> includes the optional function, <code>setup()</code>, that will automatically be run when we call <code>augmentOwner()</code>.  When it is run, <code>setup()</code> receives an <code>owner</code> argument that is bound to the owner of the behaviour, and the optional <code>settings</code> object, if one was passed to <code>augmentOwner()</code>.
     </p>
 
     <h3>Bind a behaviour to an event</h3>
@@ -213,19 +213,19 @@
 </pre>
 
     <p>
-      I called <code>eventer()</code> to get the event emitter and used it to emit the <code>hoo</code> event that was passed in via <code>settings</code>.  I sent along the name of the behaviour as data.  That way, anyone who binds to the <code>hoo</code> event will know who is doing the hooing.
+      We called <code>eventer()</code> to get the event emitter and used it to emit the <code>hoo</code> event that was passed in via <code>settings</code>.  We sent along the name of the behaviour as data.  That way, anyone who binds to the <code>hoo</code> event will know who is doing the hooing.
     </p>
 
     <h3>Unbind a behaviour from an event</h3>
 
     <p>
-      Let's say we're worried that we are going a bit mental with the wooing.  We can alter our behaviour so that, after wooing once, it unbinds from the <code>woo</code> event, thus cutting out any future woos.
+      Let's say we become worried that we are going a bit mental with the wooing.  We can alter our behaviour so that, after wooing once, it unbinds from the <code>woo</code> event, thus cutting out any future woos.
     </p>
 
 <pre class="prettyprint">
   woo: function() {
     console.log("Woo.");
-    andro.eventer(this.owner).emit("hoo", this.name);
+    andro.eventer(this.owner).emit(this.followUp, this.name);
     andro.eventer(this.owner).unbind(this, "woo");
   }
 </pre>
@@ -268,10 +268,10 @@
   };
 </pre>
 
-    <h2>Why might this not be cool?</h2>
+    <h2><a name="notcool">Why might this not be cool?</a></h2>
 
     <p>
-      Andro.js contains four modes of expression: mixins, exports, settings objects and event emitters.  The library protects you from harming your owner objects: behaviours are name-spaced and you cannot give an export the same name as an existing owner attribute.  However, armed with an event emitter and mixins, you can still express yourself into a hell of a mess.  Therefore, I humbly offer you some things that seem to be true more often than not.
+      Andro.js contains four modes of expression: mixins, exports, settings and event emitters.  The library protects you from harming your owner objects: behaviours are name-spaced and you cannot give an export the same name as an existing owner attribute.  However, armed with an event emitter and mixins, you can still express yourself into a hell of a mess.  Therefore, I humbly offer you some things that seem to be true more often than not.
     </p>
 
     <p>
@@ -280,7 +280,7 @@
       Status-consuming behaviours are also good.  Like, "Every time I hear my owner has been touched, I make a sound."
     </p>
     <p>
-      Exported functions that allow the interrogation of state are OK.  Like, "Here you are, owner, here is a function that others can use find out whether anything is touching you."
+      Exported functions that allow the interrogation of state are OK.  Like, "Here you are, owner, here is a function that others can use to find out if anything is touching you."
     </p>
     <p>
       Exported functions that allow the state of the owner to be changed are to be used sparingly.  Don't go wild with stuff like, "Owner, here is a function that allows someone to tell you to play a sound."
