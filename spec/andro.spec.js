@@ -149,35 +149,6 @@ describe('augmentOwner', function(){
   });
 });
 
-describe('behaviour', function(){
-  var behaviour1 = null;
-  var behaviour2 = null;
-
-  beforeEach(function () {
-    behaviour1 = { name: "Behaviour1" };
-    behaviour2 = { name: "Behaviour2" };
-  });
-
-  it('should return right behaviour', function(){
-    andro.setupOwner(obj);
-    andro.augmentOwner(obj, behaviour1);
-    andro.augmentOwner(obj, behaviour2);
-
-    expect(andro.behaviour(obj, behaviour2.name).name).toEqual("Behaviour2");
-  });
-
-  it('should return undefined if no such behaviour', function(){
-    andro.setupOwner(obj);
-    expect(andro.behaviour(obj, "noway")).not.toBeDefined();
-  });
-
-  it('should throw error if called on obj not set up', function(){
-    expect(function(){
-      andro.behaviour(obj, "whatever");
-    }).toThrow("This object is not set up for Andro.");
-  });
-});
-
 describe('eventer', function(){
   it('should return eventer', function(){
     andro.setupOwner(obj);
