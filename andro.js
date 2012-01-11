@@ -66,12 +66,6 @@
       }
     },
 
-    behaviour: function(owner, behaviourName) {
-      if(this.checkIsSetup(owner)) {
-        return owner.behaviours[behaviourName];
-      }
-    },
-
     eventer: function(owner) {
       if(this.checkIsSetup(owner)) {
         return owner.behaviours.eventer;
