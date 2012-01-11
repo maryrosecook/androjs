@@ -32,7 +32,7 @@
       }
     },
 
-    augmentOwner: function(owner, behaviourMixin) {
+    augmentOwner: function(owner, behaviourMixin, settings) {
       if(!this.checkIsSetup(owner)) {
         return;
       }
@@ -54,7 +54,10 @@
 
       // write exports to owner
       if(owner.behaviours[behaviour.name].setup !== undefined) {
-        var exports = owner.behaviours[behaviour.name].setup(owner);
+        if(settings === undefined) {
+          settings = {};
+        }
+        var exports = owner.behaviours[behaviour.name].setup(owner, settings);
         for(var name in exports) {
           if(owner[name] === undefined) {
             owner[name] = makeFn(exports[name], behaviour, arguments);
