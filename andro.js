@@ -21,24 +21,15 @@
     };
   };
 
-  var generateBehaviourName = function(owner) {
-    var name = Math.floor(Math.random() * 1000000000000000).toString();
-    if(owner.behaviours[name] === undefined) {
-      return name;
-    }
-    else {
-      return generateBehaviourName(owner);
-    }
-  };
-
   Andro.prototype = {
     setup: function(owner) {
       if(this.isSetup(owner)) {
-        throw "Object already set up, or has conflicting property called behaviours.";
+        throw "Object already set up, or has conflicting property called andro.";
       }
       else {
-        owner.behaviours = [];
-        owner.behaviours.eventer = new Eventer();
+        owner.andro = {};
+        owner.andro.behaviours = [];
+        owner.andro.eventer = new Eventer();
       }
     },
 
@@ -52,7 +43,7 @@
       }
 
       var behaviour = {};
-      owner.behaviours.push(behaviour);
+      owner.andro.behaviours.push(behaviour);
       extend(behaviour, behaviourMixin);
 
       // write exports to owner
@@ -77,16 +68,16 @@
 
     eventer: function(owner) {
       if(this.checkIsSetup(owner)) {
-        return owner.behaviours.eventer;
+        return owner.andro.eventer;
       }
     },
 
-    // Returns true if owner has behaviours set up on it.
+    // Returns true if owner has andro obj on it.
     isSetup: function(owner) {
-      return owner.behaviours !== undefined;
+      return owner.andro !== undefined;
     },
 
-    // Returns true if owner has behaviours set up on it, or throws exception if it doesn't.
+    // Returns true if owner has andro obj on it, or throws exception if it doesn't.
     checkIsSetup: function(owner) {
       if(this.isSetup(owner)) {
         return true;

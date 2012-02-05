@@ -18,12 +18,12 @@ describe('setup', function(){
 
   it('should put behaviours on passed object', function(){
     andro.setup(obj);
-    expect(obj.behaviours).toBeDefined();
+    expect(obj.andro.behaviours).toBeDefined();
   });
 
   it('should put eventer on behaviours', function(){
     andro.setup(obj);
-    expect(obj.behaviours.eventer.bind).toBeDefined();
+    expect(obj.andro.eventer.bind).toBeDefined();
   });
 
   it('should throw error if setup called twice on one obj', function(){
@@ -31,7 +31,7 @@ describe('setup', function(){
 
     expect(function(){
       andro.setup(obj)
-    }).toThrow("Object already set up, or has conflicting property called behaviours.");
+    }).toThrow("Object already set up, or has conflicting property called andro.");
   });
 });
 
@@ -69,8 +69,8 @@ describe('augment', function(){
     andro.setup(obj);
     andro.augment(obj, basicBehaviour);
 
-    expect(typeof(obj.behaviours[0].blah)).toEqual('function');
-    expect(typeof(obj.behaviours[0].woo)).toEqual('number');
+    expect(typeof(obj.andro.behaviours[0].blah)).toEqual('function');
+    expect(typeof(obj.andro.behaviours[0].woo)).toEqual('number');
   });
 
   it('should call setup function on behaviour if specified', function(){
@@ -81,7 +81,7 @@ describe('augment', function(){
     andro.setup(obj);
     andro.augment(obj, basicBehaviour);
 
-    expect(obj.behaviours[0].yeah).toEqual(true);
+    expect(obj.andro.behaviours[0].yeah).toEqual(true);
   });
 
   it('should pass settings into setup() when called on behaviour', function(){
@@ -95,7 +95,7 @@ describe('augment', function(){
       woohoo: "yes"
     });
 
-    expect(obj.behaviours[0].yeah).toEqual(true);
+    expect(obj.andro.behaviours[0].yeah).toEqual(true);
   });
 
   it('should pass empty obj into setup() when called on behaviour if no settings', function(){
@@ -107,7 +107,7 @@ describe('augment', function(){
     andro.setup(obj);
     andro.augment(obj, basicBehaviour);
 
-    expect(obj.behaviours[0].yeah).toEqual(true);
+    expect(obj.andro.behaviours[0].yeah).toEqual(true);
   });
 
   it('should write exports from setup to main obj', function() {
