@@ -229,7 +229,7 @@
     <h3>Export from a behaviour</h3>
 
     <p>
-      To gild the lily, we will make <code>wooBehaviour</code> respond to enquiries about whether "woo" has been said.  To do this, we add an attribute called <code>hasWooed</code> and alter the <code>woo</code> function to set <code>hasWooed</code> to <code>true</code>.  We add a function, <code>getHasWooed()</code>, that returns <code>hasWooed</code>.  Finally, we alter <code>setup()</code> so that it returns an object that includes <code>getHasWooed</code>.  This function will get written onto the owner object so it can be used by the owner itself, or by other objects.
+      To gild the lily, we will make <code>wooBehaviour</code> respond to enquiries about whether "woo" has been said.  To do this, we add an attribute called <code>hasWooed</code> and alter the <code>woo</code> function to set <code>hasWooed</code> to <code>true</code>.  We add a function, <code>getHasWooed()</code>, that returns <code>hasWooed</code>.  Finally, we alter <code>setup()</code> so that it returns an object that includes <code>getHasWooed</code>.  This function will get written onto the owner object so it can be used by the owner, or by other objects.
     </p>
 
 <pre class="prettyprint">
@@ -242,7 +242,7 @@
       andro.eventer(owner).bind(this, "woo", this.woo);
 
       return {
-        "hasWooed": this.hasWooed
+        "getHasWooed": this.getHasWooed
       };
     },
 
