@@ -6,7 +6,7 @@ beforeEach(function () {
   var andro = new Andro();
   var obj = {};
 
-  andro.setupOwner(obj);
+  andro.setup(obj);
   eventer = andro.eventer(obj);
 
   bound = {};

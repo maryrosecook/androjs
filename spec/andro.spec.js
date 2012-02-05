@@ -14,33 +14,32 @@ describe('andro basics', function(){
   });
 });
 
-describe('setupOwner', function(){
+describe('setup', function(){
 
   it('should put behaviours on passed object', function(){
-    andro.setupOwner(obj);
+    andro.setup(obj);
     expect(obj.behaviours).toBeDefined();
   });
 
   it('should put eventer on behaviours', function(){
-    andro.setupOwner(obj);
+    andro.setup(obj);
     expect(obj.behaviours.eventer.bind).toBeDefined();
   });
 
   it('should throw error if setup called twice on one obj', function(){
-    andro.setupOwner(obj);
+    andro.setup(obj);
 
     expect(function(){
-      andro.setupOwner(obj)
+      andro.setup(obj)
     }).toThrow("Object already set up, or has conflicting property called behaviours.");
   });
 });
 
-describe('augmentOwner', function(){
+describe('augment', function(){
   var basicBehaviour = null;
 
   beforeEach(function () {
     basicBehaviour = {
-      name: "Behaviour",
       woo: 1,
       blah: function() {}
     };
@@ -48,51 +47,30 @@ describe('augmentOwner', function(){
 
   it('should throw error if called on obj not set up', function(){
     expect(function(){
-      andro.augmentOwner(obj, {});
+      andro.augment(obj, {});
     }).toThrow("This object is not set up for Andro.");
   });
 
   it('should throw error if no behaviour passed', function(){
-    andro.setupOwner(obj);
+    andro.setup(obj);
 
     expect(function(){
-      andro.augmentOwner(obj);
+      andro.augment(obj);
     }).toThrow("You must pass a behaviour with which to augment the owner.");
   });
 
-  it('should throw error if behaviour has no name attribute', function(){
-    var behaviour = {};
-    andro.setupOwner(obj);
-
-    expect(function(){
-      andro.augmentOwner(obj, behaviour);
-    }).toThrow("Behaviours must have a 'name' attribute.");
-  });
-
-  it('should throw error if behaviour passed called eventer', function(){
-    var behaviour = { name: "eventer" };
-    andro.setupOwner(obj);
-
-    expect(function(){
-      andro.augmentOwner(obj, behaviour);
-    }).toThrow("You may not call your behaviour 'eventer'. This word is reserved for internal use.");
-  });
-
   it('should not require behaviour has a setup function', function(){
-    var behaviour = {
-      name: "Behaviour",
-    };
-
-    andro.setupOwner(obj);
-    andro.augmentOwner(obj, behaviour); // no error thrown
+    var behaviour = {};
+    andro.setup(obj);
+    andro.augment(obj, behaviour); // no error thrown
   });
 
   it('should write attributes of passed behaviour to owner', function(){
-    andro.setupOwner(obj);
-    andro.augmentOwner(obj, basicBehaviour);
+    andro.setup(obj);
+    andro.augment(obj, basicBehaviour);
 
-    expect(typeof(obj.behaviours[basicBehaviour.name].blah)).toEqual('function');
-    expect(typeof(obj.behaviours[basicBehaviour.name].woo)).toEqual('number');
+    expect(typeof(obj.behaviours[0].blah)).toEqual('function');
+    expect(typeof(obj.behaviours[0].woo)).toEqual('number');
   });
 
   it('should call setup function on behaviour if specified', function(){
@@ -100,10 +78,10 @@ describe('augmentOwner', function(){
       this.yeah = true;
     };
 
-    andro.setupOwner(obj);
-    andro.augmentOwner(obj, basicBehaviour);
+    andro.setup(obj);
+    andro.augment(obj, basicBehaviour);
 
-    expect(obj.behaviours[basicBehaviour.name].yeah).toEqual(true);
+    expect(obj.behaviours[0].yeah).toEqual(true);
   });
 
   it('should pass settings into setup() when called on behaviour', function(){
@@ -112,12 +90,12 @@ describe('augmentOwner', function(){
       expect(settings.woohoo).toEqual("yes");
     };
 
-    andro.setupOwner(obj);
-    andro.augmentOwner(obj, basicBehaviour, {
+    andro.setup(obj);
+    andro.augment(obj, basicBehaviour, {
       woohoo: "yes"
     });
 
-    expect(obj.behaviours[basicBehaviour.name].yeah).toEqual(true);
+    expect(obj.behaviours[0].yeah).toEqual(true);
   });
 
   it('should pass empty obj into setup() when called on behaviour if no settings', function(){
@@ -126,10 +104,10 @@ describe('augmentOwner', function(){
       expect(settings).toEqual({});
     };
 
-    andro.setupOwner(obj);
-    andro.augmentOwner(obj, basicBehaviour);
+    andro.setup(obj);
+    andro.augment(obj, basicBehaviour);
 
-    expect(obj.behaviours[basicBehaviour.name].yeah).toEqual(true);
+    expect(obj.behaviours[0].yeah).toEqual(true);
   });
 
   it('should write exports from setup to main obj', function() {
@@ -139,8 +117,8 @@ describe('augmentOwner', function(){
       }
     };
 
-    andro.setupOwner(obj);
-    andro.augmentOwner(obj, basicBehaviour);
+    andro.setup(obj);
+    andro.augment(obj, basicBehaviour);
 
     expect(typeof(obj.getWoo)).toEqual('function');
   });
@@ -154,8 +132,8 @@ describe('augmentOwner', function(){
       }
     };
 
-    andro.setupOwner(obj);
-    andro.augmentOwner(obj, basicBehaviour);
+    andro.setup(obj);
+    andro.augment(obj, basicBehaviour);
 
     expect(obj.getWoo()).toEqual(1);
   });
@@ -168,16 +146,16 @@ describe('augmentOwner', function(){
     };
 
     obj.woo = "whatever";
-    andro.setupOwner(obj);
+    andro.setup(obj);
     expect(function(){
-      andro.augmentOwner(obj, basicBehaviour);
-    }).toThrow(basicBehaviour.name + " export would overwrite existing attribute on owner.");
+      andro.augment(obj, basicBehaviour);
+    }).toThrow("Behaviour export would overwrite existing attribute on owner.");
   });
 });
 
 describe('eventer', function(){
   it('should return eventer', function(){
-    andro.setupOwner(obj);
+    andro.setup(obj);
     expect(andro.eventer(obj).bind).toBeDefined();
   });
 
@@ -190,7 +168,7 @@ describe('eventer', function(){
 
 describe('isSetup', function(){
   it('should return true if obj setup', function(){
-    andro.setupOwner(obj);
+    andro.setup(obj);
     expect(andro.isSetup(obj)).toEqual(true);
   });
 
@@ -201,7 +179,7 @@ describe('isSetup', function(){
 
 describe('checkIsSetup', function(){
   it('should return true if obj setup', function(){
-    andro.setupOwner(obj);
+    andro.setup(obj);
     expect(andro.isSetup(obj)).toEqual(true);
   });
 
