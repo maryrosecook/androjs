@@ -58,14 +58,13 @@
 
 <pre class="prettyprint">
   var firstTouchBehaviour = {
-    name: "FirstTouch",
     touchCount: 0,
 
     setup: function(owner) {
       andro.eventer(owner).bind(this, "touch", function(contact) {
         if(contact === "added") {
           if(this.touchCount === 0) {
-            andro.eventer(owner).emit(this.name + ":newlyBeingTouched");
+            andro.eventer(owner).emit("FirstTouch:newlyBeingTouched");
           }
           this.touchCount++;
         } else if(contact === "removed") {
@@ -82,7 +81,6 @@
 
 <pre class="prettyprint">
   var soundBehaviour = {
-    name: "Sound",
     setup: function(owner) {
       andro.eventer(owner).bind(this, "FirstTouch:newlyBeingTouched", function() {
         console.log("Rarrrrrwwwwwwwwwwwwwwww");
@@ -136,20 +134,18 @@
 
     <h3>Add a behaviour to an owner object</h3>
     <p>
-      A behaviour is a JavaScript object that has some properties and functions.  It must, at a minimum, have a <code>name</code> property.  Here is a behaviour that does absolutely nothing:
+      A behaviour is a JavaScript object that has some properties and functions.  It can be an empty object, if you like.  Here is a behaviour that is not an empty object, but still does absolutely nothing:
     </p>
 
 <pre class="prettyprint">
   var wooBehaviour = {
-    name: "Woo",
-
     setup: function(owner, settings) {
       this.owner = owner;
     }
   };
 </pre>
     <p>
-      We add this behaviour to the owner object by calling <code>augmentOwner()</code> and passing in <code>ownerObject</code>, <code>wooBehaviour</code> and an optional <code>settings</code> object.  This creates a behaviour object at <code>ownerObject.behaviours[behaviour.name]</code> and writes the properties and functions of the behaviour to it.
+      We add this behaviour to the owner object by calling <code>augmentOwner()</code> and passing in <code>ownerObject</code>, <code>wooBehaviour</code> and an optional <code>settings</code> object.  This creates a behaviour object, adds it to the <code>ownerObject.behaviours</code> array and writes the properties and functions of the behaviour to it.
     </p>
 
 <pre class="prettyprint">
@@ -174,8 +170,6 @@
 
 <pre class="prettyprint">
   var wooBehaviour = {
-    name: "Woo",
-
     setup: function(owner, settings) {
       this.owner = owner;
       andro.eventer(owner).bind(this, "woo", function() {
@@ -197,8 +191,6 @@
 
 <pre class="prettyprint">
   var wooBehaviour = {
-    name: "Woo",
-
     setup: function(owner, settings) {
       this.owner = owner;
       this.followUp = settings.followUp;
@@ -207,13 +199,13 @@
 
     woo: function() {
       console.log("Woo.");
-      andro.eventer(this.owner).emit(this.followUp, this.name);
+      andro.eventer(this.owner).emit(this.followUp, "Woo");
     }
   };
 </pre>
 
     <p>
-      We called <code>eventer()</code> to get the event emitter and used it to emit the <code>hoo</code> event that was passed in via <code>settings</code>.  We sent along the name of the behaviour as data.  That way, anyone who binds to the <code>hoo</code> event will know who is doing the hooing.
+      We called <code>eventer()</code> to get the event emitter and used it to emit the <code>hoo</code> event that was passed in via <code>settings</code>.  We sent along an identifying string, <code>Woo</code>, as data.  That way, anyone who binds to the <code>hoo</code> event will know who is doing the hooing.
     </p>
 
     <h3>Unbind a behaviour from an event</h3>
@@ -225,7 +217,7 @@
 <pre class="prettyprint">
   woo: function() {
     console.log("Woo.");
-    andro.eventer(this.owner).emit(this.followUp, this.name);
+    andro.eventer(this.owner).emit(this.followUp, "Woo");
     andro.eventer(this.owner).unbind(this, "woo");
   }
 </pre>
@@ -242,7 +234,6 @@
 
 <pre class="prettyprint">
   var wooBehaviour = {
-    name: "Woo",
     hasWooed: false,
 
     setup: function(owner, settings) {
@@ -258,7 +249,7 @@
     woo: function() {
       console.log("Woo.");
       this.hasWooed = true;
-      andro.eventer(this.owner).emit(this.followUp, this.name);
+      andro.eventer(this.owner).emit(this.followUp, "Woo");
       andro.eventer(this.owner).unbind(this, "woo");
     },
 
