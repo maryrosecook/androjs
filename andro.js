@@ -21,6 +21,16 @@
     };
   };
 
+  var generateBehaviourName = function(owner) {
+    var name = Math.floor(Math.random() * 1000000000000000).toString();
+    if(owner.behaviours[name] === undefined) {
+      return name;
+    }
+    else {
+      return generateBehaviourName(owner);
+    }
+  };
+
   Andro.prototype = {
     setupOwner: function(owner) {
       if(this.isSetup(owner)) {
@@ -41,32 +51,29 @@
         throw "You must pass a behaviour with which to augment the owner.";
       }
 
-      if(behaviourMixin.name === undefined) {
-        throw "Behaviours must have a 'name' attribute.";
-      }
 
-      if(behaviourMixin.name === "eventer") {
-        throw "You may not call your behaviour 'eventer'. This word is reserved for internal use.";
-      }
-
-      owner.behaviours[behaviourMixin.name] = {};
-      var behaviour = extend(owner.behaviours[behaviourMixin.name], behaviourMixin);
+      var name = generateBehaviourName(owner);
+      owner.behaviours[name] = {};
+      var behaviour = extend(owner.behaviours[name], behaviourMixin);
 
       // write exports to owner
-      if(owner.behaviours[behaviour.name].setup !== undefined) {
+      if(owner.behaviours[name].setup !== undefined) {
         if(settings === undefined) {
           settings = {};
         }
-        var exports = owner.behaviours[behaviour.name].setup(owner, settings);
+
+        var exports = owner.behaviours[name].setup(owner, settings);
         for(var name in exports) {
           if(owner[name] === undefined) {
             owner[name] = makeFn(exports[name], behaviour, arguments);
           }
           else {
-            throw behaviour.name + " export would overwrite existing attribute on owner.";
+            throw "Behaviour export would overwrite existing attribute on owner.";
           }
         }
       }
+
+      return name; // return just in case user wants to do something mental
     },
 
     eventer: function(owner) {
