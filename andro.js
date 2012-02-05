@@ -32,7 +32,7 @@
   };
 
   Andro.prototype = {
-    setupOwner: function(owner) {
+    setup: function(owner) {
       if(this.isSetup(owner)) {
         throw "Object already set up, or has conflicting property called behaviours.";
       }
@@ -42,7 +42,7 @@
       }
     },
 
-    augmentOwner: function(owner, behaviourMixin, settings) {
+    augment: function(owner, behaviourMixin, settings) {
       if(!this.checkIsSetup(owner)) {
         return;
       }
