@@ -37,7 +37,7 @@
         throw "Object already set up, or has conflicting property called behaviours.";
       }
       else {
-        owner.behaviours = {};
+        owner.behaviours = [];
         owner.behaviours.eventer = new Eventer();
       }
     },
@@ -51,18 +51,17 @@
         throw "You must pass a behaviour with which to augment the owner.";
       }
 
-
-      var name = generateBehaviourName(owner);
-      owner.behaviours[name] = {};
-      var behaviour = extend(owner.behaviours[name], behaviourMixin);
+      var behaviour = {};
+      owner.behaviours.push(behaviour);
+      extend(behaviour, behaviourMixin);
 
       // write exports to owner
-      if(owner.behaviours[name].setup !== undefined) {
+      if(behaviour.setup !== undefined) {
         if(settings === undefined) {
           settings = {};
         }
 
-        var exports = owner.behaviours[name].setup(owner, settings);
+        var exports = behaviour.setup(owner, settings);
         for(var name in exports) {
           if(owner[name] === undefined) {
             owner[name] = makeFn(exports[name], behaviour, arguments);
