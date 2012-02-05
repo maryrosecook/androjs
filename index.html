@@ -95,9 +95,9 @@
 
 <pre class="prettyprint">
   var cube = new Cube();
-  andro.setupOwner(cube);
-  andro.augmentOwner(cube, firstTouchBehaviour);
-  andro.augmentOwner(cube, soundBehaviour);
+  andro.setup(cube);
+  andro.augment(cube, firstTouchBehaviour);
+  andro.augment(cube, soundBehaviour);
 
   cube.touch("added"); // rarrrww
   cube.touch("added"); // silence
@@ -122,14 +122,14 @@
     <h3>Set up an owner object</h3>
 
     <p>
-      We call <code>setupOwner()</code>, passing in an owner object.  This adds a <code>behaviours</code> property that will hold the behaviour objects that augment the owner.  It also adds a <code>behaviours.eventer</code> property that holds the event emitter.
+      We call <code>setup()</code>, passing in an owner object.  This adds a <code>behaviours</code> property that will hold the behaviour objects that augment the owner.  It also adds a <code>behaviours.eventer</code> property that holds the event emitter.
     </p>
 
 <pre class="prettyprint">
   var andro = new Andro();
 
   var ownerObject = {};
-  andro.setupOwner(ownerObject);
+  andro.setup(ownerObject);
 </pre>
 
     <h3>Add a behaviour to an owner object</h3>
@@ -145,21 +145,21 @@
   };
 </pre>
     <p>
-      We add this behaviour to the owner object by calling <code>augmentOwner()</code> and passing in <code>ownerObject</code>, <code>wooBehaviour</code> and an optional <code>settings</code> object.  This creates a behaviour object, adds it to the <code>ownerObject.behaviours</code> array and writes the properties and functions of the behaviour to it.
+      We add this behaviour to the owner object by calling <code>augment()</code> and passing in <code>ownerObject</code>, <code>wooBehaviour</code> and an optional <code>settings</code> object.  This creates a behaviour object, adds it to the <code>ownerObject.behaviours</code> array and writes the properties and functions of the behaviour to it.
     </p>
 
 <pre class="prettyprint">
   var andro = new Andro();
 
   var ownerObject = {};
-  andro.setupOwner(ownerObject);
-  andro.augmentOwner(ownerObject, wooBehaviour, {
+  andro.setup(ownerObject);
+  andro.augment(ownerObject, wooBehaviour, {
     followUp: "hoo"
   });
 </pre>
 
     <p>
-      <code>wooBehaviour</code> includes the optional function, <code>setup()</code>, that will automatically be run when we call <code>augmentOwner()</code>.  When it is run, <code>setup()</code> receives an <code>owner</code> argument that is bound to the owner of the behaviour, and the optional <code>settings</code> object, if one was passed to <code>augmentOwner()</code>.
+      <code>wooBehaviour</code> includes the optional function, <code>setup()</code>, that will automatically be run when we call <code>augment()</code>.  When it is run, <code>setup()</code> receives an <code>owner</code> argument that is bound to the owner of the behaviour, and the optional <code>settings</code> object, if one was passed to <code>augment()</code>.
     </p>
 
     <h3>Bind a behaviour to an event</h3>
