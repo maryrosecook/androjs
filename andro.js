@@ -34,10 +34,7 @@
     },
 
     augment: function(owner, behaviourMixin, settings) {
-      if(!this.checkIsSetup(owner)) {
-        return;
-      }
-
+      this.checkIsSetup(owner);
       if(behaviourMixin === undefined) {
         throw "You must pass a behaviour with which to augment the owner.";
       }
