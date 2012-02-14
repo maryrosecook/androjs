@@ -38,7 +38,7 @@
     <h3>Um, may I see an example?</h3>
 
     <p>
-      I require the <code>andro.js</code> file.  I instantiate <code>Andro</code>.  I define a <code>Cube</code> constructor with a <code>touch</code> function.  When this <code>touch</code> function is called, it emits a <code>touch</code> event to all behaviours attached to the cube.
+      I require the <code>andro.js</code> file.  I instantiate <code>Andro</code>.  I define the owner object as a constructor called <code>Cube</code>.  It has a <code>touch</code> function that, when called, emits a <code>touch</code> event to all behaviours attached to the cube.
     </p>
 
 <pre class="prettyprint">
@@ -266,7 +266,12 @@
     </p>
 
     <p>
-      Status behaviours are good.  That is, behaviours that solely talk about what is going on.  Like, "My owner is no longer being touched by anything".</p>
+      Behaviours should have one responsbility: flash a light, make a sound, register touches.
+    </p>
+
+    <p>
+      Status behaviours are good.  That is, behaviours that solely talk about what is going on.  Like, "My owner is no longer being touched by anything".
+    </p>
     <p>
       Status-consuming behaviours are also good.  Like, "Every time I hear that my owner has been touched, I make a sound."
     </p>
@@ -274,16 +279,16 @@
       Exported functions that allow the interrogation of state are OK.  Like, "Here you are, owner.  Here is a function that others can use to find out if anything is touching you."
     </p>
     <p>
-      Exported functions that allow the state of the owner to be changed are to be used sparingly.  Don't go wild with stuff like, "Owner, here is a function that allows someone to tell you to play a sound."
+      Changing the state of the owner, either via an exported function or from within a behaviour: bad.
     </p>
     <p>
-      Behaviours that issue orders are bad.  Like, "Every time I hear my owner has been touched, I say, 'make a sound', because there might be a sound-maker hanging around who can handle my order."  This sort of talk is hard to debug because it comprises one behaviour mediating between two others.
+      Behaviours that mediate between other behaviours are hard to understand.  Like, "Every time I hear my owner has been touched, I emit an event that tells the sound behaviour to pipe up."  Use these sparingly and name them well.
     </p>
 
     <h2>Licence</h2>
 
     <p>
-      The <a href='http://github.com/maryrosecook/androjs'>code</a> is open source, under the MIT licence.
+      The <a href='http://github.com/maryrosecook/androjs'>code</a> is open source, under the <a href='http://en.wikipedia.org/wiki/MIT_License'>MIT licence</a>.
     </p>
 
     <hr/>
