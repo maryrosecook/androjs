@@ -84,8 +84,27 @@ describe('augment', function(){
     expect(obj.andro.behaviours[0].yeah).toEqual(true);
   });
 
+  it('should pass owner into setup() when called on behaviour', function(){
+    basicBehaviour.setup = function(owner, eventer) {
+      expect(owner).toEqual(obj);
+    };
+
+    andro.setup(obj);
+    andro.augment(obj, basicBehaviour);
+  });
+
+  it('should pass eventer into setup() when called on behaviour', function(){
+    basicBehaviour.setup = function(owner, eventer) {
+      andro.eventer(obj).dispatch !== undefined; // double check returns eventer
+      expect(eventer).toEqual(andro.eventer(obj));
+    };
+
+    andro.setup(obj);
+    andro.augment(obj, basicBehaviour);
+  });
+
   it('should pass settings into setup() when called on behaviour', function(){
-    basicBehaviour.setup = function(owner, settings) {
+    basicBehaviour.setup = function(owner, eventer, settings) {
       this.yeah = true;
       expect(settings.woohoo).toEqual("yes");
     };
@@ -99,7 +118,7 @@ describe('augment', function(){
   });
 
   it('should pass empty obj into setup() when called on behaviour if no settings', function(){
-    basicBehaviour.setup = function(owner, settings) {
+    basicBehaviour.setup = function(owner, eventer, settings) {
       this.yeah = true;
       expect(settings).toEqual({});
     };
@@ -161,7 +180,7 @@ describe('eventer', function(){
 
   it('should throw error if called on obj not set up', function(){
     expect(function(){
-      andro.eventer(obj, "whatever");
+      andro.eventer(obj);
     }).toThrow("This object is not set up for Andro.");
   });
 });
@@ -180,12 +199,12 @@ describe('isSetup', function(){
 describe('checkIsSetup', function(){
   it('should return true if obj setup', function(){
     andro.setup(obj);
-    expect(andro.isSetup(obj)).toEqual(true);
+    expect(andro.checkIsSetup(obj)).toEqual(true);
   });
 
   it('should throw error if called on obj not set up', function(){
     expect(function(){
-      andro.eventer(obj, "whatever");
+      andro.checkIsSetup(obj);
     }).toThrow("This object is not set up for Andro.");
   });
 });

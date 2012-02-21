@@ -49,7 +49,7 @@
           settings = {};
         }
 
-        var exports = behaviour.setup(owner, settings);
+        var exports = behaviour.setup(owner, owner.andro.eventer, settings);
         for(var name in exports) {
           if(owner[name] === undefined) {
             owner[name] = makeFn(exports[name], behaviour, arguments);
