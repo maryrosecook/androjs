@@ -1,3 +1,11 @@
+/*
+  Andro.js
+  by mary rose cook
+  http://github.com/maryrosecook/androjs
+
+  Mix behaviour into objects
+*/
+
 ;(function() {
   function Andro() {};
 
