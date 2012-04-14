@@ -23,9 +23,9 @@
     return target;
   };
 
-  var makeFn = function(fn, behaviour, args) {
+  var makeFn = function(fn, behaviour) {
     return function() {
-      return fn.call(behaviour, args);
+      return fn.apply(behaviour, arguments);
     };
   };
 
@@ -60,7 +60,7 @@
         var exports = behaviour.setup(owner, owner.andro.eventer, settings);
         for(var name in exports) {
           if(owner[name] === undefined) {
-            owner[name] = makeFn(exports[name], behaviour, arguments);
+            owner[name] = makeFn(exports[name], behaviour);
           }
           else {
             throw "Behaviour export would overwrite existing attribute on owner.";
