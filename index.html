@@ -38,7 +38,7 @@
     <h3>Um, may I see an example?</h3>
 
     <p>
-      I require the <code>andro.js</code> file.  I instantiate <code>Andro</code>.  I define a <code>Cube</code> constructor with a <code>touch</code> function.  When this <code>touch</code> function is called, it emits a <code>touch</code> event to all behaviours attached to the cube.
+      I require the <code>andro.js</code> file.  I instantiate <code>Andro</code>.  I define the owner object as a constructor called <code>Cube</code>.  It has a <code>touch</code> function that, when called, uses the <code>andro.eventer()</code> function to get the eventer to emit a <code>touch</code> event to all behaviours attached to the cube.
     </p>
 
 <pre class="prettyprint">
@@ -58,14 +58,13 @@
 
 <pre class="prettyprint">
   var firstTouchBehaviour = {
-    name: "FirstTouch",
     touchCount: 0,
 
-    setup: function(owner) {
-      andro.eventer(owner).bind(this, "touch", function(contact) {
+    setup: function(owner, eventer) {
+      eventer.bind(this, "touch", function(contact) {
         if(contact === "added") {
           if(this.touchCount === 0) {
-            andro.eventer(owner).emit(this.name + ":newlyBeingTouched");
+            eventer.emit("FirstTouch:newlyBeingTouched");
           }
           this.touchCount++;
         } else if(contact === "removed") {
@@ -82,9 +81,8 @@
 
 <pre class="prettyprint">
   var soundBehaviour = {
-    name: "Sound",
-    setup: function(owner) {
-      andro.eventer(owner).bind(this, "FirstTouch:newlyBeingTouched", function() {
+    setup: function(owner, eventer) {
+      eventer.bind(this, "FirstTouch:newlyBeingTouched", function() {
         console.log("Rarrrrrwwwwwwwwwwwwwwww");
       });
     }
@@ -97,9 +95,9 @@
 
 <pre class="prettyprint">
   var cube = new Cube();
-  andro.setupOwner(cube);
-  andro.augmentOwner(cube, firstTouchBehaviour);
-  andro.augmentOwner(cube, soundBehaviour);
+  andro.setup(cube);
+  andro.augment(cube, firstTouchBehaviour);
+  andro.augment(cube, soundBehaviour);
 
   cube.touch("added"); // rarrrww
   cube.touch("added"); // silence
@@ -124,46 +122,44 @@
     <h3>Set up an owner object</h3>
 
     <p>
-      We call <code>setupOwner()</code>, passing in an owner object.  This adds a <code>behaviours</code> property that will hold the behaviour objects that augment the owner.  It also adds a <code>behaviours.eventer</code> property that holds the event emitter.
+      We call <code>setup()</code>, passing in an owner object.  This adds a <code>behaviours</code> property that will hold the behaviour objects that augment the owner.  It also adds a <code>behaviours.eventer</code> property that holds the event emitter.
     </p>
 
 <pre class="prettyprint">
   var andro = new Andro();
 
   var ownerObject = {};
-  andro.setupOwner(ownerObject);
+  andro.setup(ownerObject);
 </pre>
 
     <h3>Add a behaviour to an owner object</h3>
     <p>
-      A behaviour is a JavaScript object that has some properties and functions.  It must, at a minimum, have a <code>name</code> property.  Here is a behaviour that does absolutely nothing:
+      A behaviour is a JavaScript object that has some properties and functions.  It can be an empty object, if you like.  Here is a behaviour that is not an empty object, but still does absolutely nothing:
     </p>
 
 <pre class="prettyprint">
   var wooBehaviour = {
-    name: "Woo",
-
-    setup: function(owner, settings) {
+    setup: function(owner, eventer, settings) {
       this.owner = owner;
     }
   };
 </pre>
     <p>
-      We add this behaviour to the owner object by calling <code>augmentOwner()</code> and passing in <code>ownerObject</code>, <code>wooBehaviour</code> and an optional <code>settings</code> object.  This creates a behaviour object at <code>ownerObject.behaviours[behaviour.name]</code> and writes the properties and functions of the behaviour to it.
+      We add this behaviour to the owner object by calling <code>augment()</code> and passing in <code>ownerObject</code>, <code>wooBehaviour</code> and an optional <code>settings</code> object.  This creates a behaviour object, adds it to the <code>ownerObject.behaviours</code> array and writes the properties and functions of the behaviour to it.
     </p>
 
 <pre class="prettyprint">
   var andro = new Andro();
 
   var ownerObject = {};
-  andro.setupOwner(ownerObject);
-  andro.augmentOwner(ownerObject, wooBehaviour, {
+  andro.setup(ownerObject);
+  andro.augment(ownerObject, wooBehaviour, {
     followUp: "hoo"
   });
 </pre>
 
     <p>
-      <code>wooBehaviour</code> includes the optional function, <code>setup()</code>, that will automatically be run when we call <code>augmentOwner()</code>.  When it is run, <code>setup()</code> receives an <code>owner</code> argument that is bound to the owner of the behaviour, and the optional <code>settings</code> object, if one was passed to <code>augmentOwner()</code>.
+      <code>wooBehaviour</code> includes the optional function, <code>setup()</code>, that will automatically be run when we call <code>augment()</code>.  When it is run, <code>setup()</code> receives an <code>owner</code> argument that is bound to the owner of the behaviour, and the optional <code>settings</code> object, if one was passed to <code>augment()</code>.
     </p>
 
     <h3>Bind a behaviour to an event</h3>
@@ -174,11 +170,9 @@
 
 <pre class="prettyprint">
   var wooBehaviour = {
-    name: "Woo",
-
-    setup: function(owner, settings) {
+    setup: function(owner, eventer, settings) {
       this.owner = owner;
-      andro.eventer(owner).bind(this, "woo", function() {
+      eventer.bind(this, "woo", function() {
         console.log("Woo.");
       });
     }
@@ -186,7 +180,7 @@
 </pre>
 
     <p>
-      A reference to the event emitter was obtained by calling <code>eventer()</code> and passing in the owner object.  The <code>setup()</code> function now calls <code>bind</code>, passing the behaviour, event name and a callback.  Now, whenever the event, <code>woo</code>, is emitted, our behaviour will go, "woo".
+      The <code>setup()</code> function now calls <code>bind</code>, passing the behaviour, event name and a callback.  Now, whenever the event, <code>woo</code>, is emitted, our behaviour will go, "woo".
     </p>
 
     <h3>Emit events from a behaviour</h3>
@@ -197,23 +191,22 @@
 
 <pre class="prettyprint">
   var wooBehaviour = {
-    name: "Woo",
-
-    setup: function(owner, settings) {
+    setup: function(owner, eventer, settings) {
       this.owner = owner;
+      this.eventer = eventer;
       this.followUp = settings.followUp;
-      andro.eventer(owner).bind(this, "woo", this.woo);
+      eventer.bind(this, "woo", this.woo);
     },
 
     woo: function() {
       console.log("Woo.");
-      andro.eventer(this.owner).emit(this.followUp, this.name);
+      this.eventer.emit(this.followUp, "Woo");
     }
   };
 </pre>
 
     <p>
-      We called <code>eventer()</code> to get the event emitter and used it to emit the <code>hoo</code> event that was passed in via <code>settings</code>.  We sent along the name of the behaviour as data.  That way, anyone who binds to the <code>hoo</code> event will know who is doing the hooing.
+      We emitted the <code>hoo</code> event that was passed in via <code>settings</code>.  We sent along an identifying string, <code>Woo</code>, as data.  That way, anyone who binds to the <code>hoo</code> event will know who is doing the hooing.
     </p>
 
     <h3>Unbind a behaviour from an event</h3>
@@ -225,41 +218,41 @@
 <pre class="prettyprint">
   woo: function() {
     console.log("Woo.");
-    andro.eventer(this.owner).emit(this.followUp, this.name);
-    andro.eventer(this.owner).unbind(this, "woo");
+    this.eventer.emit(this.followUp, "Woo");
+    this.eventer.unbind(this, "woo");
   }
 </pre>
 
     <p>
-      See how on line four it gets the eventer, calls unbind, and passes in the behaviour and the event to unbind from?
+      See how on line four it calls unbind on the eventer, passing in the behaviour and the event to unbind from?
     </p>
 
     <h3>Export from a behaviour</h3>
 
     <p>
-      To gild the lily, we will make <code>wooBehaviour</code> respond to enquiries about whether "woo" has been said.  To do this, we add an attribute called <code>hasWooed</code> and alter the <code>woo</code> function to set <code>hasWooed</code> to <code>true</code>.  We add a function, <code>getHasWooed()</code>, that returns <code>hasWooed</code>.  Finally, we alter <code>setup()</code> so that it returns an object that includes <code>getHasWooed</code>.  This function will get written onto the owner object so it can be used by the owner itself, or by other objects.
+      To gild the lily, we will make <code>wooBehaviour</code> respond to enquiries about whether "woo" has been said.  To do this, we add an attribute called <code>hasWooed</code> and alter the <code>woo</code> function to set <code>hasWooed</code> to <code>true</code>.  We add a function, <code>getHasWooed()</code>, that returns <code>hasWooed</code>.  Finally, we alter <code>setup()</code> so that it returns an object that includes <code>getHasWooed</code>.  This function will get written onto the owner object so it can be used by the owner, or by other objects.
     </p>
 
 <pre class="prettyprint">
   var wooBehaviour = {
-    name: "Woo",
     hasWooed: false,
 
-    setup: function(owner, settings) {
+    setup: function(owner, eventer, settings) {
       this.owner = owner;
+      this.eventer = eventer;
       this.followUp = settings.followUp;
-      andro.eventer(owner).bind(this, "woo", this.woo);
+      eventer.bind(this, "woo", this.woo);
 
       return {
-        "hasWooed": this.hasWooed
+        "getHasWooed": this.getHasWooed
       };
     },
 
     woo: function() {
       console.log("Woo.");
       this.hasWooed = true;
-      andro.eventer(this.owner).emit(this.followUp, this.name);
-      andro.eventer(this.owner).unbind(this, "woo");
+      eventer.emit(this.followUp, "Woo");
+      eventer.unbind(this, "woo");
     },
 
     getHasWooed: function() {
@@ -275,24 +268,29 @@
     </p>
 
     <p>
-      Status behaviours are good.  That is, behaviours that solely talk about what is going on.  Like, "My owner is longer being touched by anything".</p>
+      Behaviours should have one responsbility: flash a light, make a sound, register touches.
+    </p>
+
     <p>
-      Status-consuming behaviours are also good.  Like, "Every time I hear my owner has been touched, I make a sound."
+      Status behaviours are good.  That is, behaviours that solely talk about what is going on.  Like, "My owner is no longer being touched by anything".
+    </p>
+    <p>
+      Status-consuming behaviours are also good.  Like, "Every time I hear that my owner has been touched, I make a sound."
     </p>
     <p>
       Exported functions that allow the interrogation of state are OK.  Like, "Here you are, owner.  Here is a function that others can use to find out if anything is touching you."
     </p>
     <p>
-      Exported functions that allow the state of the owner to be changed are to be used sparingly.  Don't go wild with stuff like, "Owner, here is a function that allows someone to tell you to play a sound."
+      Changing the state of the owner, either via an exported function or from within a behaviour: bad.
     </p>
     <p>
-      Behaviours that issue orders are bad.  Like, "Every time I hear my owner has been touched, I say, 'make a sound', because there might be a sound-maker hanging around who can handle my order."  This sort of talk is hard to debug because it comprises one behaviour mediating between two others.
+      Behaviours that mediate between other behaviours are hard to understand.  Like, "Every time I hear my owner has been touched, I emit an event that tells the sound behaviour to pipe up."  Use these sparingly and name them well.
     </p>
 
     <h2>Licence</h2>
 
     <p>
-      The <a href='http://github.com/maryrosecook/androjs'>code</a> is open source, under the MIT licence.
+      The <a href='http://github.com/maryrosecook/androjs'>code</a> is open source, under the <a href='http://en.wikipedia.org/wiki/MIT_License'>MIT licence</a>.
     </p>
 
     <hr/>

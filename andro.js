@@ -1,3 +1,11 @@
+/*
+  Andro.js
+  by mary rose cook
+  http://github.com/maryrosecook/androjs
+
+  Mix behaviour into objects
+*/
+
 ;(function() {
   function Andro() {};
 
@@ -15,72 +23,66 @@
     return target;
   };
 
-  var makeFn = function(fn, behaviour, args) {
+  var makeFn = function(fn, behaviour) {
     return function() {
-      return fn.call(behaviour, args);
+      return fn.apply(behaviour, arguments);
     };
   };
 
   Andro.prototype = {
-    setupOwner: function(owner) {
+    setup: function(owner) {
       if(this.isSetup(owner)) {
-        throw "Object already set up, or has conflicting property called behaviours.";
+        throw "Object already set up, or has conflicting property called andro.";
       }
       else {
-        owner.behaviours = {};
-        owner.behaviours.eventer = new Eventer();
+        owner.andro = {};
+        owner.andro.behaviours = [];
+        owner.andro.eventer = new Eventer();
       }
     },
 
-    augmentOwner: function(owner, behaviourMixin, settings) {
-      if(!this.checkIsSetup(owner)) {
-        return;
-      }
-
+    augment: function(owner, behaviourMixin, settings) {
+      this.checkIsSetup(owner);
       if(behaviourMixin === undefined) {
         throw "You must pass a behaviour with which to augment the owner.";
       }
 
-      if(behaviourMixin.name === undefined) {
-        throw "Behaviours must have a 'name' attribute.";
-      }
-
-      if(behaviourMixin.name === "eventer") {
-        throw "You may not call your behaviour 'eventer'. This word is reserved for internal use.";
-      }
-
-      owner.behaviours[behaviourMixin.name] = {};
-      var behaviour = extend(owner.behaviours[behaviourMixin.name], behaviourMixin);
+      var behaviour = {};
+      owner.andro.behaviours.push(behaviour);
+      extend(behaviour, behaviourMixin);
 
       // write exports to owner
-      if(owner.behaviours[behaviour.name].setup !== undefined) {
+      if(behaviour.setup !== undefined) {
         if(settings === undefined) {
           settings = {};
         }
-        var exports = owner.behaviours[behaviour.name].setup(owner, settings);
+
+        var exports = behaviour.setup(owner, owner.andro.eventer, settings);
         for(var name in exports) {
           if(owner[name] === undefined) {
-            owner[name] = makeFn(exports[name], behaviour, arguments);
+            owner[name] = makeFn(exports[name], behaviour);
           }
           else {
-            throw behaviour.name + " export would overwrite existing attribute on owner.";
+            throw "Behaviour export would overwrite existing attribute on owner.";
           }
         }
       }
+
+      return name; // return just in case user wants to do something mental
     },
 
     eventer: function(owner) {
       if(this.checkIsSetup(owner)) {
-        return owner.behaviours.eventer;
+        return owner.andro.eventer;
       }
     },
 
-    // Returns true if owner has behaviours set up on it.
+    // Returns true if owner has andro obj on it.
     isSetup: function(owner) {
-      return owner.behaviours !== undefined;
+      return owner.andro !== undefined;
     },
 
-    // Returns true if owner has behaviours set up on it, or throws exception if it doesn't.
+    // Returns true if owner has andro obj on it, or throws exception if it doesn't.
     checkIsSetup: function(owner) {
       if(this.isSetup(owner)) {
         return true;
