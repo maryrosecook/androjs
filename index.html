@@ -45,7 +45,7 @@
   var Andro = require('andro').Andro;
   var andro = new Andro();
 
-  function Cube {
+  function Cube() {
     this.touch = function(contact) {
       andro.eventer(this).emit("touch", contact);
     };
