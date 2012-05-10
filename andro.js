@@ -10,6 +10,7 @@
   function Andro() {};
 
   Andro.prototype = {
+    // Sets up the passed owner object to use behaviours
     setup: function(owner) {
       if(this.isSetup(owner)) {
         throw "Object already set up, or has conflicting property called andro.";
@@ -21,6 +22,7 @@
       }
     },
 
+    // Adds the passed behaviour to the passed owner
     augment: function(owner, behaviourMixin, settings) {
       this.checkIsSetup(owner);
       if(behaviourMixin === undefined) {
@@ -51,6 +53,7 @@
       return name; // return just in case user wants to do something mental
     },
 
+    // Returns eventer obj for passed owner object
     eventer: function(owner) {
       if(this.checkIsSetup(owner)) {
         return owner.andro.eventer;
