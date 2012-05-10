@@ -35,6 +35,47 @@ describe('setup', function(){
   });
 });
 
+describe('tearDown', function(){
+  it('should remove .andro from owner obj', function(){
+    andro.setup(obj);
+    expect(obj.andro).toBeDefined();
+    andro.tearDown(obj);
+    expect(obj.andro).toBeUndefined();
+  });
+
+  it('should remove all callbacks from eventer', function(){
+    andro.setup(obj);
+    var eventer = andro.eventer(obj);
+
+    // bind to two events
+    var calledA = 0, calledB = 0;
+    eventer.bind({}, "eventA", function() {
+      calledA++;
+    });
+    eventer.bind({}, "eventB", function() {
+      calledB++;
+    });
+
+    eventer.emit("eventA");
+    eventer.emit("eventB");
+    expect(calledA).toEqual(1);
+    expect(calledB).toEqual(1);
+
+    andro.tearDown(obj);
+
+    eventer.emit("eventA");
+    eventer.emit("eventB");
+    expect(calledA).toEqual(1);
+    expect(calledB).toEqual(1);
+  });
+
+  it('should throw error if called on object not setup for andro', function(){
+    expect(function(){
+      andro.tearDown(obj);
+    }).toThrow("This object is not set up for Andro.");
+  });
+});
+
 describe('augment', function(){
   var basicBehaviour = null;
 
