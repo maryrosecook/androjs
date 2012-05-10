@@ -57,18 +57,18 @@ describe('eventer', function(){
   });
 
   it('should not call callback previously bound to emitted event', function(){
-    var called1 = false, called2 = false;
+    var called = 0;
     eventer.bind(bound, "event", function() {
-      called1 = true;
+      called++;
     });
 
     // callback fired the first time
     eventer.emit("event");
-    expect(called1).toEqual(true);
+    expect(called).toEqual(1);
 
-    // but should now not be after unbind
+    // but should not be after unbind
     eventer.unbind(bound, "event");
     eventer.emit("event");
-    expect(called2).toEqual(false);
+    expect(called).toEqual(1);
   });
 });

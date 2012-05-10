@@ -119,10 +119,12 @@
     },
 
     unbind: function(obj, event) {
-      for(var i in this.callbacks) {
-        if(this.callbacks[i].obj === obj) {
-          delete this.callbacks[i];
-          break;
+      for(var boundEvent in this.callbacks) {
+        for(var i = 0; i < this.callbacks[boundEvent].length; i++) {
+          if(this.callbacks[boundEvent][i].obj === obj) {
+            this.callbacks[boundEvent].splice(i, 1);
+            break;
+          }
         }
       }
     },
