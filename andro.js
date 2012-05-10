@@ -22,6 +22,14 @@
       }
     },
 
+    // Shuts down and removes ALL behaviours from passed owner object
+    tearDown: function(owner) {
+      if(this.checkIsSetup(owner)) {
+        this.eventer(owner).unbindAll();
+        delete owner.andro; // remove andro from owner object
+      }
+    },
+
     // Adds the passed behaviour to the passed owner
     augment: function(owner, behaviourMixin, settings) {
       this.checkIsSetup(owner);
@@ -116,6 +124,12 @@
           delete this.callbacks[i];
           break;
         }
+      }
+    },
+
+    unbindAll: function() {
+      for(var i in this.callbacks) {
+        delete this.callbacks[i];
       }
     },
 
