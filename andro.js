@@ -9,26 +9,6 @@
 ;(function() {
   function Andro() {};
 
-  var extend = function(target, extensions) {
-    for(var property in extensions) {
-      if(extensions[property] && extensions[property].constructor &&
-         extensions[property].constructor === Object) {
-        target[property] = extend(target[property] || {}, extensions[property]);
-      }
-      else {
-        target[property] = extensions[property];
-      }
-    }
-
-    return target;
-  };
-
-  var makeFn = function(fn, behaviour) {
-    return function() {
-      return fn.apply(behaviour, arguments);
-    };
-  };
-
   Andro.prototype = {
     setup: function(owner) {
       if(this.isSetup(owner)) {
@@ -90,6 +70,26 @@
 
       throw "This object is not set up for Andro.";
     }
+  };
+
+  var extend = function(target, extensions) {
+    for(var property in extensions) {
+      if(extensions[property] && extensions[property].constructor &&
+         extensions[property].constructor === Object) {
+        target[property] = extend(target[property] || {}, extensions[property]);
+      }
+      else {
+        target[property] = extensions[property];
+      }
+    }
+
+    return target;
+  };
+
+  var makeFn = function(fn, behaviour) {
+    return function() {
+      return fn.apply(behaviour, arguments);
+    };
   };
 
   function Eventer() {
