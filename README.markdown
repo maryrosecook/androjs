@@ -14,6 +14,13 @@ Andro.js takes mixins and applies them, each in its own namespace, to an object,
 
 Imagine a cube.  It can be touched.  You want it to make a sound when it goes from not being touched to being touched.  You write a little behaviour that emits an event when a first touch occurs.  You write another little behaviour that plays a sound when it receives a first touch event.  You combine these behaviours on your cube with Andro.js.
 
+## Get the code
+
+* Minified: https://github.com/maryrosecook/androjs/andro-min.js
+* Single file: https://github.com/maryrosecook/androjs/andro.js
+* GitHub: https://github.com/maryrosecook/androjs
+* `$ npm install androjs`
+
 ## Get started
 
 Download the repository.  Require the `andro.js` file in your code.  Open `index.html` in your browser to see the documentation and an example.
