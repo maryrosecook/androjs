@@ -20,7 +20,7 @@ Imagine a cube.  It can be touched.  You want it to make a sound when it goes fr
 * Minified: https://github.com/maryrosecook/androjs/andro-min.js
 * Single file: https://github.com/maryrosecook/androjs/andro.js
 * GitHub: https://github.com/maryrosecook/androjs
-* `$ npm install androjs`
+* npm: `$ npm install androjs`
 
 ## Get started
 
