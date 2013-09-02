@@ -43,12 +43,11 @@
     <h2>Example</h2>
 
     <p>
-      I require the <code>andro.js</code> file.  I instantiate <code>Andro</code>.  I define the owner object as a constructor called <code>Cube</code>.  It has a <code>touch</code> function that, when called, uses the <code>andro.eventer()</code> function to get the eventer to emit a <code>touch</code> event to all behaviours attached to the cube.
+      I require the <code>andro.js</code> file.  I define the owner object as a constructor called <code>Cube</code>.  It has a <code>touch</code> function that, when called, uses the <code>andro.eventer()</code> function to get the eventer to emit a <code>touch</code> event to all behaviours attached to the cube.
     </p>
 
 <pre class="prettyprint">
-  var Andro = require('andro').Andro;
-  var andro = new Andro();
+  var andro = require('andro').andro;
 
   function Cube() {
     this.touch = function(contact) {
@@ -131,8 +130,6 @@
     </p>
 
 <pre class="prettyprint">
-  var andro = new Andro();
-
   var ownerObject = {};
   andro.setup(ownerObject);
 </pre>
@@ -154,8 +151,6 @@
     </p>
 
 <pre class="prettyprint">
-  var andro = new Andro();
-
   var ownerObject = {};
   andro.setup(ownerObject);
   andro.augment(ownerObject, wooBehaviour, {
