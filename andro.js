@@ -6,10 +6,8 @@
   Mix behaviour into objects
 */
 
-;(function() {
-  function Andro() {};
-
-  Andro.prototype = {
+;(function(exports) {
+  exports.andro = {
     // Sets up the passed owner object to use behaviours
     setup: function(owner) {
       if(this.isSetup(owner)) {
@@ -151,6 +149,4 @@
       }
     }
   };
-
-  this.Andro = Andro;
-}).call(this);
+})(this);
