@@ -38,7 +38,7 @@ Install the node dependencies
 Run the tests
 
     $ cd path/to/androjs
-    $ node_modules/jasmine-node/bin/jasmine-node spec/
+    $ npm test
 
 ## Licence
 
