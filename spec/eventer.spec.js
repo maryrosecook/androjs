@@ -1,9 +1,8 @@
-var Andro = require('../andro').Andro;
+var andro = require('../andro').andro;
 
 var eventer = null;
 var bound = {};
 beforeEach(function () {
-  var andro = new Andro();
   var obj = {};
 
   andro.setup(obj);

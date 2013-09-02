@@ -1,9 +1,7 @@
-var Andro = require('../andro').Andro;
+var andro = require('../andro').andro;
 
-var andro = null;
 var obj = null;
 beforeEach(function () {
-  andro = new Andro();
   obj = {};
 });
 
