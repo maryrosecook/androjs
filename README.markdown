@@ -17,8 +17,8 @@ Imagine a cube.  It can be touched.  You want it to make a sound when it goes fr
 
 ## Get the code
 
-* Minified: https://github.com/maryrosecook/androjs/andro-min.js
-* Single file: https://github.com/maryrosecook/androjs/andro.js
+* Minified: https://raw.github.com/maryrosecook/androjs/master/andro-min.js
+* Single file: https://raw.github.com/maryrosecook/androjs/master/andro.js
 * GitHub: https://github.com/maryrosecook/androjs
 * npm: `$ npm install androjs`
 
