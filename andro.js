@@ -1,11 +1,3 @@
-/*
-  Andro.js
-  by mary rose cook
-  http://github.com/maryrosecook/androjs
-
-  Mix behaviour into objects
-*/
-
 ;(function(exports) {
   exports.andro = {
     // Sets up the passed owner object to use behaviours
