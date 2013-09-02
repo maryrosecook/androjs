@@ -9,27 +9,8 @@
 ;(function() {
   function Andro() {};
 
-  var extend = function(target, extensions) {
-    for(var property in extensions) {
-      if(extensions[property] && extensions[property].constructor &&
-         extensions[property].constructor === Object) {
-        target[property] = extend(target[property] || {}, extensions[property]);
-      }
-      else {
-        target[property] = extensions[property];
-      }
-    }
-
-    return target;
-  };
-
-  var makeFn = function(fn, behaviour) {
-    return function() {
-      return fn.apply(behaviour, arguments);
-    };
-  };
-
   Andro.prototype = {
+    // Sets up the passed owner object to use behaviours
     setup: function(owner) {
       if(this.isSetup(owner)) {
         throw "Object already set up, or has conflicting property called andro.";
@@ -41,6 +22,15 @@
       }
     },
 
+    // Shuts down and removes ALL behaviours from passed owner object
+    tearDown: function(owner) {
+      if(this.checkIsSetup(owner)) {
+        this.eventer(owner).unbindAll();
+        delete owner.andro; // remove andro from owner object
+      }
+    },
+
+    // Adds the passed behaviour to the passed owner
     augment: function(owner, behaviourMixin, settings) {
       this.checkIsSetup(owner);
       if(behaviourMixin === undefined) {
@@ -71,6 +61,7 @@
       return name; // return just in case user wants to do something mental
     },
 
+    // Returns eventer obj for passed owner object
     eventer: function(owner) {
       if(this.checkIsSetup(owner)) {
         return owner.andro.eventer;
@@ -92,6 +83,26 @@
     }
   };
 
+  var extend = function(target, extensions) {
+    for(var property in extensions) {
+      if(extensions[property] && extensions[property].constructor &&
+         extensions[property].constructor === Object) {
+        target[property] = extend(target[property] || {}, extensions[property]);
+      }
+      else {
+        target[property] = extensions[property];
+      }
+    }
+
+    return target;
+  };
+
+  var makeFn = function(fn, behaviour) {
+    return function() {
+      return fn.apply(behaviour, arguments);
+    };
+  };
+
   function Eventer() {
     this.callbacks = {};
   }
@@ -108,11 +119,19 @@
     },
 
     unbind: function(obj, event) {
-      for(var i in this.callbacks) {
-        if(this.callbacks[i].obj === obj) {
-          delete this.callbacks[i];
-          break;
+      for(var boundEvent in this.callbacks) {
+        for(var i = 0; i < this.callbacks[boundEvent].length; i++) {
+          if(this.callbacks[boundEvent][i].obj === obj) {
+            this.callbacks[boundEvent].splice(i, 1);
+            break;
+          }
         }
+      }
+    },
+
+    unbindAll: function() {
+      for(var i in this.callbacks) {
+        delete this.callbacks[i];
       }
     },
 

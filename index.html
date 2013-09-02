@@ -266,6 +266,16 @@
   };
 </pre>
 
+    <h3>Remove Andro augmentation</h3>
+
+    <p>
+      When we grow tired of all the wooing and hooing, we can restore our faithful old object to its pre-Andro state by calling <code>tearDown()</code>.  This will remove the andro object from the owner object and unbind all event callbacks.
+    </p>
+
+<pre class="prettyprint">
+  andro.tearDown(ownerObject);
+</pre>
+
     <h2><a name="notcool">Why might this not be cool?</a></h2>
 
     <p>
