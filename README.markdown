@@ -1,5 +1,4 @@
 # Andro.js
-version 0.2
 
 * by mary rose cook
 * http://maryrosecook.com
