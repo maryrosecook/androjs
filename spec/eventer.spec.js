@@ -5,7 +5,6 @@ var bound = {};
 beforeEach(function () {
   var obj = {};
 
-  andro.setup(obj);
   eventer = andro.eventer(obj);
 
   bound = {};

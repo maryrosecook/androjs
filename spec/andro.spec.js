@@ -6,43 +6,20 @@ beforeEach(function () {
 });
 
 describe('andro basics', function(){
-
   it('should instantiate', function(){
     expect(typeof(andro)).toEqual('object');
   });
 });
 
-describe('setup', function(){
-
-  it('should put behaviours on passed object', function(){
-    andro.setup(obj);
-    expect(obj.andro.behaviours).toBeDefined();
-  });
-
-  it('should put eventer on behaviours', function(){
-    andro.setup(obj);
-    expect(obj.andro.eventer.bind).toBeDefined();
-  });
-
-  it('should throw error if setup called twice on one obj', function(){
-    andro.setup(obj);
-
-    expect(function(){
-      andro.setup(obj)
-    }).toThrow("Object already set up, or has conflicting property called andro.");
-  });
-});
-
 describe('tearDown', function(){
   it('should remove .andro from owner obj', function(){
-    andro.setup(obj);
+    andro.augment(obj, {});
     expect(obj.andro).toBeDefined();
     andro.tearDown(obj);
     expect(obj.andro).toBeUndefined();
   });
 
   it('should remove all callbacks from eventer', function(){
-    andro.setup(obj);
     var eventer = andro.eventer(obj);
 
     // bind to two events
@@ -67,10 +44,8 @@ describe('tearDown', function(){
     expect(calledB).toEqual(1);
   });
 
-  it('should throw error if called on object not setup for andro', function(){
-    expect(function(){
-      andro.tearDown(obj);
-    }).toThrow("This object is not set up for Andro.");
+  it('should not throw error if called on object not setup for andro', function(){
+    andro.tearDown(obj);
   });
 });
 
@@ -84,28 +59,17 @@ describe('augment', function(){
     };
   });
 
-  it('should throw error if called on obj not set up', function(){
-    expect(function(){
-      andro.augment(obj, {});
-    }).toThrow("This object is not set up for Andro.");
-  });
-
   it('should throw error if no behaviour passed', function(){
-    andro.setup(obj);
-
     expect(function(){
       andro.augment(obj);
     }).toThrow("You must pass a behaviour with which to augment the owner.");
   });
 
   it('should not require behaviour has a setup function', function(){
-    var behaviour = {};
-    andro.setup(obj);
-    andro.augment(obj, behaviour); // no error thrown
+    andro.augment(obj, {}); // no error thrown
   });
 
   it('should write attributes of passed behaviour to owner', function(){
-    andro.setup(obj);
     andro.augment(obj, basicBehaviour);
 
     expect(typeof(obj.andro.behaviours[0].blah)).toEqual('function');
@@ -117,9 +81,7 @@ describe('augment', function(){
       this.yeah = true;
     };
 
-    andro.setup(obj);
     andro.augment(obj, basicBehaviour);
-
     expect(obj.andro.behaviours[0].yeah).toEqual(true);
   });
 
@@ -128,7 +90,6 @@ describe('augment', function(){
       expect(owner).toEqual(obj);
     };
 
-    andro.setup(obj);
     andro.augment(obj, basicBehaviour);
   });
 
@@ -138,7 +99,6 @@ describe('augment', function(){
       expect(eventer).toEqual(andro.eventer(obj));
     };
 
-    andro.setup(obj);
     andro.augment(obj, basicBehaviour);
   });
 
@@ -148,7 +108,6 @@ describe('augment', function(){
       expect(settings.woohoo).toEqual("yes");
     };
 
-    andro.setup(obj);
     andro.augment(obj, basicBehaviour, {
       woohoo: "yes"
     });
@@ -162,7 +121,6 @@ describe('augment', function(){
       expect(settings).toEqual({});
     };
 
-    andro.setup(obj);
     andro.augment(obj, basicBehaviour);
 
     expect(obj.andro.behaviours[0].yeah).toEqual(true);
@@ -175,7 +133,6 @@ describe('augment', function(){
       }
     };
 
-    andro.setup(obj);
     andro.augment(obj, basicBehaviour);
 
     expect(typeof(obj.getWoo)).toEqual('function');
@@ -190,9 +147,7 @@ describe('augment', function(){
       }
     };
 
-    andro.setup(obj);
     andro.augment(obj, basicBehaviour);
-
     expect(obj.getWoo()).toEqual(1);
   });
 
@@ -204,7 +159,6 @@ describe('augment', function(){
     };
 
     obj.woo = "whatever";
-    andro.setup(obj);
     expect(function(){
       andro.augment(obj, basicBehaviour);
     }).toThrow("Behaviour export would overwrite existing attribute on owner.");
@@ -213,37 +167,8 @@ describe('augment', function(){
 
 describe('eventer', function(){
   it('should return eventer', function(){
-    andro.setup(obj);
+    var obj = {}
+    andro.augment(obj, {});
     expect(andro.eventer(obj).bind).toBeDefined();
-  });
-
-  it('should throw error if called on obj not set up', function(){
-    expect(function(){
-      andro.eventer(obj);
-    }).toThrow("This object is not set up for Andro.");
-  });
-});
-
-describe('isSetup', function(){
-  it('should return true if obj setup', function(){
-    andro.setup(obj);
-    expect(andro.isSetup(obj)).toEqual(true);
-  });
-
-  it('should return false if obj not setup', function(){
-    expect(andro.isSetup(obj)).toEqual(false);
-  });
-});
-
-describe('checkIsSetup', function(){
-  it('should return true if obj setup', function(){
-    andro.setup(obj);
-    expect(andro.checkIsSetup(obj)).toEqual(true);
-  });
-
-  it('should throw error if called on obj not set up', function(){
-    expect(function(){
-      andro.checkIsSetup(obj);
-    }).toThrow("This object is not set up for Andro.");
   });
 });

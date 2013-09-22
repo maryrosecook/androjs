@@ -1,20 +1,8 @@
 ;(function(exports) {
   exports.andro = {
-    // Sets up the passed owner object to use behaviours
-    setup: function(owner) {
-      if(this.isSetup(owner)) {
-        throw "Object already set up, or has conflicting property called andro.";
-      }
-      else {
-        owner.andro = {};
-        owner.andro.behaviours = [];
-        owner.andro.eventer = new Eventer();
-      }
-    },
-
     // Shuts down and removes ALL behaviours from passed owner object
     tearDown: function(owner) {
-      if(this.checkIsSetup(owner)) {
+      if(isSetup(owner)) {
         this.eventer(owner).unbindAll();
         delete owner.andro; // remove andro from owner object
       }
@@ -22,10 +10,11 @@
 
     // Adds the passed behaviour to the passed owner
     augment: function(owner, behaviourMixin, settings) {
-      this.checkIsSetup(owner);
       if(behaviourMixin === undefined) {
         throw "You must pass a behaviour with which to augment the owner.";
       }
+
+      setupIfNotSetup(owner);
 
       var behaviour = {};
       owner.andro.behaviours.push(behaviour);
@@ -53,24 +42,23 @@
 
     // Returns eventer obj for passed owner object
     eventer: function(owner) {
-      if(this.checkIsSetup(owner)) {
-        return owner.andro.eventer;
-      }
-    },
-
-    // Returns true if owner has andro obj on it.
-    isSetup: function(owner) {
-      return owner.andro !== undefined;
-    },
-
-    // Returns true if owner has andro obj on it, or throws exception if it doesn't.
-    checkIsSetup: function(owner) {
-      if(this.isSetup(owner)) {
-        return true;
-      }
-
-      throw "This object is not set up for Andro.";
+      setupIfNotSetup(owner);
+      return owner.andro.eventer;
     }
+  };
+
+    // Sets up the passed owner object to use behaviours
+  var setupIfNotSetup = function(owner) {
+    if (!isSetup(owner)) {
+      owner.andro = {};
+      owner.andro.behaviours = [];
+      owner.andro.eventer = new Eventer();
+    }
+  };
+
+  // Returns true if owner has andro obj on it.
+  var isSetup = function(owner) {
+    return owner.andro !== undefined;
   };
 
   var extend = function(target, extensions) {

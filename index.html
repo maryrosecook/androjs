@@ -93,12 +93,11 @@
 </pre>
 
     <p>
-      I now put everything together.  I instantiate <code>cube</code>, set it up for use with Andro.js and augment it with <code>firstTouchBehaviour</code> and <code>soundBehaviour</code>.  Finally, I simulate two touches upon the cube.  On the first, it roars.  On the second, it does not.
+      I now put everything together.  I instantiate <code>cube</code>.  I augment it with <code>firstTouchBehaviour</code> and <code>soundBehaviour</code>.  I simulate two touches upon the cube.  On the first, it roars.  On the second, it does not.
     </p>
 
 <pre class="prettyprint">
   var cube = new Cube();
-  andro.setup(cube);
   andro.augment(cube, firstTouchBehaviour);
   andro.augment(cube, soundBehaviour);
 
@@ -122,17 +121,6 @@
 
     <h2>Reference</h2>
 
-    <h3>Set up an owner object</h3>
-
-    <p>
-      We call <code>setup()</code>, passing in an owner object.  This adds a <code>behaviours</code> property that will hold the behaviour objects that augment the owner.  It also adds a <code>behaviours.eventer</code> property that holds the event emitter.
-    </p>
-
-<pre class="prettyprint">
-  var ownerObject = {};
-  andro.setup(ownerObject);
-</pre>
-
     <h3>Add a behaviour to an owner object</h3>
     <p>
       A behaviour is a JavaScript object that has some properties and functions.  It can be an empty object, if you like.  Here is a behaviour that is not an empty object, but still does absolutely nothing:
@@ -151,7 +139,6 @@
 
 <pre class="prettyprint">
   var ownerObject = {};
-  andro.setup(ownerObject);
   andro.augment(ownerObject, wooBehaviour, {
     followUp: "hoo"
   });
