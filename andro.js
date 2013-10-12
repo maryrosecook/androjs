@@ -36,8 +36,6 @@
           }
         }
       }
-
-      return name; // return just in case user wants to do something mental
     },
 
     // Returns eventer obj for passed owner object
