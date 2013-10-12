@@ -22,10 +22,7 @@
 
       // write exports to owner
       if(behaviour.setup !== undefined) {
-        if(settings === undefined) {
-          settings = {};
-        }
-
+        settings = settings || {};
         var exports = behaviour.setup(owner, owner.andro.eventer, settings);
         for(var name in exports) {
           if(owner[name] === undefined) {
