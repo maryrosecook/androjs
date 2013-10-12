@@ -46,13 +46,13 @@
     </p>
 
 <pre class="prettyprint">
-  var andro = require('andro').andro;
+var andro = require('andro').andro;
 
-  function Cube() {
-    this.touch = function(contact) {
-      andro.eventer(this).emit("touch", contact);
-    };
+function Cube() {
+  this.touch = function(contact) {
+    andro.eventer(this).emit("touch", contact);
   };
+};
 </pre>
 
     <p>
@@ -60,22 +60,22 @@
     </p>
 
 <pre class="prettyprint">
-  var firstTouchBehaviour = {
-    touchCount: 0,
+var firstTouchBehaviour = {
+  touchCount: 0,
 
-    setup: function(owner, eventer) {
-      eventer.bind(this, "touch", function(contact) {
-        if(contact === "added") {
-          if(this.touchCount === 0) {
-            eventer.emit("FirstTouch:newlyBeingTouched");
-          }
-          this.touchCount++;
-        } else if(contact === "removed") {
-          this.touchCount--;
+  setup: function(owner, eventer) {
+    eventer.bind(this, "touch", function(contact) {
+      if(contact === "added") {
+        if(this.touchCount === 0) {
+          eventer.emit("FirstTouch:newlyBeingTouched");
         }
-      });
-    }
-  };
+        this.touchCount++;
+      } else if(contact === "removed") {
+        this.touchCount--;
+      }
+    });
+  }
+};
 </pre>
 
     <p>
@@ -83,13 +83,13 @@
     </p>
 
 <pre class="prettyprint">
-  var soundBehaviour = {
-    setup: function(owner, eventer) {
-      eventer.bind(this, "FirstTouch:newlyBeingTouched", function() {
-        console.log("Rarrrrrwwwwwwwwwwwwwwww");
-      });
-    }
-  };
+var soundBehaviour = {
+  setup: function(owner, eventer) {
+    eventer.bind(this, "FirstTouch:newlyBeingTouched", function() {
+      console.log("Rarrrrrwwwwwwwwwwwwwwww");
+    });
+  }
+};
 </pre>
 
     <p>
@@ -97,12 +97,12 @@
     </p>
 
 <pre class="prettyprint">
-  var cube = new Cube();
-  andro.augment(cube, firstTouchBehaviour);
-  andro.augment(cube, soundBehaviour);
+var cube = new Cube();
+andro.augment(cube, firstTouchBehaviour);
+andro.augment(cube, soundBehaviour);
 
-  cube.touch("added"); // rarrrww
-  cube.touch("added"); // silence
+cube.touch("added"); // rarrrww
+cube.touch("added"); // silence
 </pre>
 
     <h2>Why is this cool?</h2>
@@ -127,21 +127,21 @@
     </p>
 
 <pre class="prettyprint">
-  var wooBehaviour = {
-    setup: function(owner, eventer, settings) {
-      this.owner = owner;
-    }
-  };
+var wooBehaviour = {
+  setup: function(owner, eventer, settings) {
+    this.owner = owner;
+  }
+};
 </pre>
     <p>
       We add this behaviour to the owner object by calling <code>augment()</code> and passing in <code>ownerObject</code>, <code>wooBehaviour</code> and an optional <code>settings</code> object.  This creates a behaviour object, adds it to the <code>ownerObject.behaviours</code> array and writes the properties and functions of the behaviour to it.
     </p>
 
 <pre class="prettyprint">
-  var ownerObject = {};
-  andro.augment(ownerObject, wooBehaviour, {
-    followUp: "hoo"
-  });
+var ownerObject = {};
+andro.augment(ownerObject, wooBehaviour, {
+  followUp: "hoo"
+});
 </pre>
 
     <p>
@@ -155,14 +155,14 @@
     </p>
 
 <pre class="prettyprint">
-  var wooBehaviour = {
-    setup: function(owner, eventer, settings) {
-      this.owner = owner;
-      eventer.bind(this, "woo", function() {
-        console.log("Woo.");
-      });
-    }
-  };
+var wooBehaviour = {
+  setup: function(owner, eventer, settings) {
+    this.owner = owner;
+    eventer.bind(this, "woo", function() {
+      console.log("Woo.");
+    });
+  }
+};
 </pre>
 
     <p>
@@ -176,19 +176,19 @@
     </p>
 
 <pre class="prettyprint">
-  var wooBehaviour = {
-    setup: function(owner, eventer, settings) {
-      this.owner = owner;
-      this.eventer = eventer;
-      this.followUp = settings.followUp;
-      eventer.bind(this, "woo", this.woo);
-    },
+var wooBehaviour = {
+  setup: function(owner, eventer, settings) {
+    this.owner = owner;
+    this.eventer = eventer;
+    this.followUp = settings.followUp;
+    eventer.bind(this, "woo", this.woo);
+  },
 
-    woo: function() {
-      console.log("Woo.");
-      this.eventer.emit(this.followUp, "Woo");
-    }
-  };
+  woo: function() {
+    console.log("Woo.");
+    this.eventer.emit(this.followUp, "Woo");
+  }
+};
 </pre>
 
     <p>
@@ -202,11 +202,11 @@
     </p>
 
 <pre class="prettyprint">
-  woo: function() {
-    console.log("Woo.");
-    this.eventer.emit(this.followUp, "Woo");
-    this.eventer.unbind(this, "woo");
-  }
+woo: function() {
+  console.log("Woo.");
+  this.eventer.emit(this.followUp, "Woo");
+  this.eventer.unbind(this, "woo");
+}
 </pre>
 
     <p>
@@ -220,31 +220,31 @@
     </p>
 
 <pre class="prettyprint">
-  var wooBehaviour = {
-    hasWooed: false,
+var wooBehaviour = {
+  hasWooed: false,
 
-    setup: function(owner, eventer, settings) {
-      this.owner = owner;
-      this.eventer = eventer;
-      this.followUp = settings.followUp;
-      eventer.bind(this, "woo", this.woo);
+  setup: function(owner, eventer, settings) {
+    this.owner = owner;
+    this.eventer = eventer;
+    this.followUp = settings.followUp;
+    eventer.bind(this, "woo", this.woo);
 
-      return {
-        "getHasWooed": this.getHasWooed
-      };
-    },
+    return {
+      "getHasWooed": this.getHasWooed
+    };
+  },
 
-    woo: function() {
-      console.log("Woo.");
-      this.hasWooed = true;
-      eventer.emit(this.followUp, "Woo");
-      eventer.unbind(this, "woo");
-    },
+  woo: function() {
+    console.log("Woo.");
+    this.hasWooed = true;
+    eventer.emit(this.followUp, "Woo");
+    eventer.unbind(this, "woo");
+  },
 
-    getHasWooed: function() {
-      return this.hasWooed;
-    }
-  };
+  getHasWooed: function() {
+    return this.hasWooed;
+  }
+};
 </pre>
 
     <h3>Remove Andro augmentation</h3>
@@ -254,7 +254,7 @@
     </p>
 
 <pre class="prettyprint">
-  andro.tearDown(ownerObject);
+andro.tearDown(ownerObject);
 </pre>
 
     <h2><a name="notcool">Why might this not be cool?</a></h2>

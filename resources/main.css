@@ -1,6 +1,6 @@
 body {
-	font-family:verdana, Helvetica;
-	font-size:11px;
+	font-family:"Lucida Grande", "Lucida Sans Unicode", Helvetica, Arial, sans-serif;
+	font-size:12px;
     width: 500px;
     margin-left:auto;
     margin-right:auto;
@@ -27,3 +27,18 @@ hr { color: #aaa; background-color:#aaa; height:1px; border:0; }
 
 ol { padding-left: 16px; }
 li { padding: 5px 0 5px 0; }
+
+code {
+  font-family: 'monaco', 'courier';
+}
+
+pre {
+  border-top:1px solid #ddd;
+  border-bottom:1px solid #ddd;
+  padding-top:15px;
+  padding-left:-50px;
+  margin-bottom:15px;
+  padding: 1em 0;
+  font-size:12px;
+  font-family: 'monaco', 'courier';
+}
