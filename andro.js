@@ -92,12 +92,10 @@
     },
 
     unbind: function(obj, event) {
-      for(var boundEvent in this.callbacks) {
-        for(var i = 0; i < this.callbacks[boundEvent].length; i++) {
-          if(this.callbacks[boundEvent][i].obj === obj) {
-            this.callbacks[boundEvent].splice(i, 1);
-            break;
-          }
+      for(var i = 0; i < this.callbacks[event].length; i++) {
+        if(this.callbacks[event][i].obj === obj) {
+          this.callbacks[event].splice(i, 1);
+          break;
         }
       }
     },
