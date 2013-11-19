@@ -69,4 +69,33 @@ describe('eventer', function(){
     eventer.emit("event");
     expect(called).toEqual(1);
   });
+
+  describe('regressions', function() {
+    it('should unbind callback for passed event, not all events obj bound to', function(){
+      var event1Called = 0;
+      eventer.bind(bound, "event1", function() {
+        event1Called++;
+      });
+
+      var event2Called = 0;
+      eventer.bind(bound, "event2", function() {
+        event2Called++;
+      });
+
+      // callbacks fired the first time
+      eventer.emit("event1");
+      expect(event1Called).toEqual(1);
+      eventer.emit("event2");
+      expect(event2Called).toEqual(1);
+
+      // event1 should not be after unbind
+      eventer.unbind(bound, "event1");
+      eventer.emit("event1");
+      expect(event1Called).toEqual(1);
+
+      // event2 should still be called after event1 unbound
+      eventer.emit("event2");
+      expect(event2Called).toEqual(2);
+    });
+  });
 });
